@@ -42,17 +42,6 @@ export async function signup(req, res) {
             profilePic : randomAvatar,
         });
 
-        try{
-            await upsertStreamUser({
-                id: newUser._id.toString(),
-                name: newUser.fullName,
-                image: newUser.profilePic || ""
-            });
-            console.log(`Stream user created successfully for ${newUser.fullName}`);
-        } catch(error){
-            console.log("Error creating Stream user", error);
-        }
-
         const token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET_KEY, {
             expiresIn: '7d' //token will expire in 30 days
         });
