@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Link } from "react-router"
+import { Button } from "@/Components/ui/button"
 import { Heart, Smile, BarChart3 } from "lucide-react"
 
 export default function LandingPage() {
@@ -17,12 +17,12 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/login">
+            <Link to="/login">
               <Button variant="ghost" className="rounded-full">
                 Login
               </Button>
             </Link>
-            <Link href="/signup">
+            <Link to="/signup">
               <Button className="rounded-full bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500">
                 Sign Up
               </Button>
@@ -44,7 +44,7 @@ export default function LandingPage() {
         </div>
 
         <div className="flex justify-center space-x-4 mb-12">
-          <Link href="/signup">
+          <Link to="/signup">
             <Button
               size="lg"
               className="rounded-full bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500 px-8 py-3 text-lg"
@@ -52,7 +52,7 @@ export default function LandingPage() {
               Start Your Journey
             </Button>
           </Link>
-          <Link href="/about-us">
+          <Link to="/about-us">
             <Button
               variant="outline"
               size="lg"

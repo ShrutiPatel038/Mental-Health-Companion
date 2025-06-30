@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter, usePathname } from "next/navigation"
-import Link from "next/link"
+import { useNavigate, useLocation, Link } from "react-router"
 import { Home, BarChart3, Heart, Smile, Settings, LogOut, Menu, X, Sun, Moon, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -19,13 +18,13 @@ const navigation = [
 export default function SidebarLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
-  const pathname = usePathname()
-  const router = useRouter()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     // Remove token and redirect to login
     localStorage.removeItem("token")
-    router.push("/login")
+    navigate("/login")
   }
 
   return (
@@ -63,11 +62,11 @@ export default function SidebarLayout({ children }) {
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2">
             {navigation.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = location.pathname === item.href
               return (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   className={`
                     flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all duration-200
                     ${

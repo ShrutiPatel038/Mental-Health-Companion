@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
+import { Button } from "@/Components/ui/button"
 import { Heart, Home, ArrowLeft } from "lucide-react"
 
 export default function NotFoundPage() {

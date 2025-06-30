@@ -1,18 +1,18 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useNavigate } from "react-router"
 
 export default function ProtectedRoute({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const token = localStorage.getItem("token")
 
     if (!token) {
-      router.push("/login")
+      navigate("/login")
       return
     }
 
@@ -20,7 +20,7 @@ export default function ProtectedRoute({ children }) {
     // For now, we'll just check if it exists
     setIsAuthenticated(true)
     setIsLoading(false)
-  }, [router])
+  }, [navigate])
 
   if (isLoading) {
     return (
