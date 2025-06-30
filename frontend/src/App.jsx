@@ -1,17 +1,11 @@
-import { useState } from 'react'
+import React from 'react'
 
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div className="container">
-        <h1><strong>Hello guyzizzz</strong></h1>
-      </div>
-        
-    </>
+    <div className='bg-red-500 h-screen'>
+      Hello
+      
+    </div>
   )
 }
 
