@@ -8,6 +8,7 @@ import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { Heart, Eye, EyeOff } from "lucide-react"
+import { login } from "@/lib/api"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -17,12 +18,23 @@ export default function LoginPage() {
   })
   const router = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     // Here you would typically validate credentials with your backend
-    // For demo purposes, we'll just set a token and redirect
-    localStorage.setItem("token", "demo-token")
-    router.push("/welcome")
+    
+    try {
+        const data = await login({
+          fullName: formData.name,
+          email: formData.email,
+          password: formData.password
+        })
+    
+        localStorage.setItem("token", data.token)
+        router("/welcome")
+      } catch (error) {
+        console.error("login failed:", error)
+        alert(error.response?.data?.message || "login failed")
+      }
   }
 
   const handleChange = (e) => {

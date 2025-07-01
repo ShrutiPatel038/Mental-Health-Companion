@@ -4,6 +4,27 @@ import { Button } from "@/Components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { Badge } from "@/Components/ui/badge"
 import { Flame, Target, TrendingUp, Heart } from "lucide-react"
+import { useState ,useEffect} from "react"
+import { getProfile } from "@/lib/api"
+
+
+export default function WelcomePage() {
+  const [username, setUsername] = useState("")
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile()
+        setUsername(data.username || data.name || "User") // Adjust based on your backend field
+      } catch (err) {
+        console.error("Failed to fetch profile:", err)
+      }
+    }
+
+    fetchProfile()
+  }, [])
+
+
 
 const moodEmojis = [
   { emoji: "😄", label: "Very Happy", value: 5, color: "text-green-500" },
@@ -21,7 +42,6 @@ const recommendedActivities = [
   "Practice mindfulness meditation",
 ]
 
-export default function WelcomePage() {
   return (
     <ProtectedRoute>
       <SidebarLayout>
@@ -29,7 +49,7 @@ export default function WelcomePage() {
           {/* Welcome Header */}
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
-              Welcome back, John! 🌟
+              Welcome back, {username}! 🌟
             </h1>
             <p className="text-xl text-gray-600">"Every day is a new beginning. Take a deep breath and start again."</p>
           </div>

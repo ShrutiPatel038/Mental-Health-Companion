@@ -7,9 +7,23 @@ export default function LogoutPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Remove token and redirect to login
-    localStorage.removeItem("token")
-    navigate("/login")
+        const performLogout = async () => {
+      try {
+        await logout() // 👈 Backend call to clear HttpOnly cookie
+
+        // Optional: clear frontend local token too
+        localStorage.removeItem("token")
+
+        // Redirect to login after backend logout
+        navigate("/login")
+      } catch (error) {
+        console.error("Logout failed:", error)
+        // Still redirect to login
+        navigate("/login")
+      }
+    }
+
+    performLogout()
   }, [navigate])
 
   return (

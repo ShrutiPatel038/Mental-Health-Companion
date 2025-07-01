@@ -8,6 +8,8 @@ import { Input } from "@/Components/ui/input"
 import { Label } from "@/Components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { Heart, Eye, EyeOff } from "lucide-react"
+import { signup } from "@/lib/api"
+
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -19,15 +21,26 @@ export default function SignupPage() {
   })
   const router = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!")
       return
     }
-    // Here you would typically create account with your backend
-    localStorage.setItem("token", "demo-token")
-    router.push("/welcome")
+    
+    try {
+    const data = await signup({
+      fullName: formData.name,
+      email: formData.email,
+      password: formData.password
+    })
+
+    localStorage.setItem("token", data.token)
+    router("/welcome")
+  } catch (error) {
+    console.error("Signup failed:", error)
+    alert(error.response?.data?.message || "Signup failed")
+  }
   }
 
   const handleChange = (e) => {
