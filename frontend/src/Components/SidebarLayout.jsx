@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useLocation, Link } from "react-router"
 import { Home, BarChart3, Heart, Smile, Settings, LogOut, Menu, X, Sun, Moon, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { getProfile } from "@/lib/api"
 
 const navigation = [
   { name: "Welcome", href: "/welcome", icon: Home },
@@ -16,6 +17,21 @@ const navigation = [
 ]
 
 export default function SidebarLayout({ children }) {
+  const [username, setUsername] = useState("")
+  
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          const data = await getProfile()
+          console.log("Fetched profile:", data)
+          setUsername(data.username || data.name || "User") // Adjust based on your backend field
+        } catch (err) {
+          console.error("Failed to fetch profile:", err)
+        }
+      }
+  
+      fetchProfile()
+    }, [])
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   const location = useLocation()
@@ -94,7 +110,7 @@ export default function SidebarLayout({ children }) {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">John Doe</p>
+                  <p className="text-sm font-medium text-gray-900">{username}</p>
                   <p className="text-xs text-gray-500">Feeling great! 😊</p>
                 </div>
               </div>

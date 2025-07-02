@@ -4,8 +4,59 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Com
 import { Button } from "@/Components/ui/button"
 import { Badge } from "@/Components/ui/badge"
 import { CheckCircle, Calendar, TrendingUp, Heart, Target } from "lucide-react"
+import { useEffect, useState } from "react"
+
 
 export default function DashboardPage() {
+  const [quote, setQuote] = useState('');
+  const [author, setAuthor] = useState('');
+
+
+const fetchAffirmation = async () => {
+  try {
+    const res = await fetch(`http://localhost:5555/api/affirmation?ts=${Date.now()}`, {
+      credentials: 'include'
+    });
+    const data = await res.json();
+    setQuote(data[0].q);
+    setAuthor(data[0].a);
+  } catch (err) {
+    setQuote('Something went wrong. Try again later.');
+    setAuthor('');
+  }
+};
+
+
+
+useEffect(() => {
+  fetchAffirmation()
+}, [])
+
+const { mood } = useMoodStore();
+
+useEffect(() => {
+  fetchDailyChallenge();
+}, []);
+
+const fetchDailyChallenge = async () => {
+  try {
+    const prompt = mood
+      ? `Give a short daily self-care challenge for someone feeling mood level ${mood}/5`
+      : "Give a short random mental health challenge";
+
+    const response = await fetch("/api/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+
+    const data = await response.json();
+    setChallenge(data.text); // assuming `text` is returned
+  } catch (err) {
+    setChallenge("Couldn't load challenge. Try again.");
+  }
+};
+
   return (
     <ProtectedRoute>
       <SidebarLayout>
@@ -19,7 +70,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Affirmation Section */}
-          <Card className="bg-gradient-to-r from-blue-100 to-purple-100 border-blue-300 rounded-3xl">
+          {/* <Card className="bg-gradient-to-r from-blue-100 to-purple-100 border-blue-300 rounded-3xl">
             <CardHeader>
               <CardTitle className="text-xl font-bold text-blue-800 flex items-center">
                 <Heart className="w-6 h-6 mr-2" />
@@ -33,7 +84,31 @@ export default function DashboardPage() {
               </blockquote>
               <Button className="rounded-full bg-blue-500 hover:bg-blue-600">Get New Affirmation</Button>
             </CardContent>
+          </Card> */}
+          <Card className="bg-gradient-to-r from-blue-100 to-purple-100 border-blue-300 rounded-3xl">
+            <CardHeader>
+            <CardTitle className="text-xl font-bold text-blue-800 flex items-center">
+              <Heart className="w-6 h-6 mr-2" />
+                Today's Affirmation
+            </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <blockquote className="text-lg italic text-blue-700 mb-4">
+              “{quote}”
+              <br />
+              <span className="block text-sm font-semibold text-right mt-2 text-blue-600">
+                — {author}
+              </span>
+              </blockquote>
+            <Button 
+              onClick={fetchAffirmation}
+              className="rounded-full bg-blue-500 hover:bg-blue-600"
+          >
+              Get New Affirmation
+            </Button>
+            </CardContent>
           </Card>
+
 
           {/* Daily Challenge Section */}
           <div className="grid md:grid-cols-2 gap-6">
