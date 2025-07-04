@@ -1,24 +1,30 @@
-// backend/routes/gemini.route.js
-import express from "express";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import dotenv from "dotenv";
+import { GoogleGenAI } from "@google/genai";
 
-dotenv.config();
-const router = express.Router();
+const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+export default async function handler(req, res) {
+  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
 
-router.post("/", async (req, res) => {
-  const { prompt } = req.body;
+  const { mood } = req.body;
+
+  const prompt = mood
+    ? `Give a short daily self-care challenge for someone feeling mood level ${mood}/5 only in single line and don't show any bold lines and extra information`
+    : "Give a short daily mental health self-care challenge only in single line and don't show any bold lines and extra information";
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    res.json({ text });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch from Gemini" });
-  }
-});
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        thinkingConfig: {
+          thinkingBudget: 0, // Optional: disables slow "reasoning" phase
+        },
+      },
+    });
 
-export default router;
+    res.status(200).json({ text: response.text });
+  } catch (err) {
+    console.error("Gemini error:", err);
+    res.status(500).json({ text: "Challenge generation failed." });
+  }
+}

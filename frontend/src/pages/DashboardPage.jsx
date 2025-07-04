@@ -5,11 +5,14 @@ import { Button } from "@/Components/ui/button"
 import { Badge } from "@/Components/ui/badge"
 import { CheckCircle, Calendar, TrendingUp, Heart, Target } from "lucide-react"
 import { useEffect, useState } from "react"
+import useMoodStore from "@/store/useMoodStore"
+import { getDailyChallenge, markChallengeComplete } from "@/lib/api"
 
 
 export default function DashboardPage() {
   const [quote, setQuote] = useState('');
   const [author, setAuthor] = useState('');
+  const [challenge, setChallenge] = useState('');
 
 
 const fetchAffirmation = async () => {
@@ -26,36 +29,24 @@ const fetchAffirmation = async () => {
   }
 };
 
+useEffect(() => {
+  fetchChallenge();
+}, []);
 
+const fetchChallenge = async () => {
+  try {
+    const data = await getDailyChallenge(mood);
+    setChallenge(data.text);
+  } catch (error) {
+    setChallenge("Couldn't load daily challenge.");
+  }
+};
 
 useEffect(() => {
   fetchAffirmation()
 }, [])
 
 const { mood } = useMoodStore();
-
-useEffect(() => {
-  fetchDailyChallenge();
-}, []);
-
-const fetchDailyChallenge = async () => {
-  try {
-    const prompt = mood
-      ? `Give a short daily self-care challenge for someone feeling mood level ${mood}/5`
-      : "Give a short random mental health challenge";
-
-    const response = await fetch("/api/gemini", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
-    });
-
-    const data = await response.json();
-    setChallenge(data.text); // assuming `text` is returned
-  } catch (err) {
-    setChallenge("Couldn't load challenge. Try again.");
-  }
-};
 
   return (
     <ProtectedRoute>
@@ -110,7 +101,7 @@ const fetchDailyChallenge = async () => {
           </Card>
 
 
-          {/* Daily Challenge Section */}
+          {/* Daily Challenge Section
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
               <CardHeader>
@@ -123,18 +114,18 @@ const fetchDailyChallenge = async () => {
               <CardContent>
                 <div className="space-y-4">
                   <p className="text-gray-700 bg-orange-50 p-4 rounded-2xl">
-                    Practice gratitude by writing down 3 things you're thankful for today.
+                    {challenge || "Loading your daily challenge..."}
                   </p>
-                  <Button className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500">
+                  <Button onClick={handleComplete} className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500">
                     <CheckCircle className="w-4 h-4 mr-2" />
                     Mark as Complete
                   </Button>
                 </div>
               </CardContent>
-            </Card>
+            </Card>*/}
 
             {/* Challenge Heatmap */}
-            <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
+            {/* <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
               <CardHeader>
                 <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
                   <Calendar className="w-6 h-6 mr-2 text-green-500" />
@@ -142,8 +133,8 @@ const fetchDailyChallenge = async () => {
                 </CardTitle>
                 <CardDescription>Your consistency over the past month</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-7 gap-2">
+              <CardContent> */}
+                {/* <div className="grid grid-cols-7 gap-2">
                   {Array.from({ length: 28 }, (_, i) => (
                     <div
                       key={i}
@@ -153,8 +144,11 @@ const fetchDailyChallenge = async () => {
                       title={`Day ${i + 1}`}
                     />
                   ))}
-                </div>
-                <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
+                </div> */}
+                
+    
+
+                {/* <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
                   <span>Less</span>
                   <div className="flex space-x-1">
                     <div className="w-3 h-3 bg-gray-100 rounded"></div>
@@ -167,7 +161,104 @@ const fetchDailyChallenge = async () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </div>  */}
+
+          {/* Daily Challenge Section */}
+<div className="grid md:grid-cols-2 gap-6">
+  {/* Daily Challenge Card */}
+  <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
+    <CardHeader>
+      <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
+        <Target className="w-6 h-6 mr-2 text-orange-500" />
+        Today's Challenge
+      </CardTitle>
+      <CardDescription>Complete this to maintain your streak!</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        <p className="text-gray-700 bg-orange-50 p-4 rounded-2xl">
+          {challenge || "Loading your daily challenge..."}
+        </p>
+        <Button
+          onClick={handleMarkComplete}
+          className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
+        >
+          <CheckCircle className="w-4 h-4 mr-2" />
+          Mark as Complete
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Heatmap Card */}
+  <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
+    <CardHeader className="flex justify-between items-center">
+      <div>
+        <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
+          <Calendar className="w-6 h-6 mr-2 text-green-500" />
+          Challenge Completion
+        </CardTitle>
+        <CardDescription>Your consistency this month</CardDescription>
+      </div>
+      {/* Month Nav */}
+      <div className="flex items-center space-x-2">
+        <Button
+          variant="ghost"
+          onClick={handlePrevMonth}
+          className="px-2 py-1 text-xs"
+        >
+          ←
+        </Button>
+        <span className="text-sm font-semibold text-gray-700">
+          {new Date(currentMonth + "-01").toLocaleString("default", {
+            month: "long",
+            year: "numeric",
+          })}
+        </span>
+        <Button
+          variant="ghost"
+          onClick={handleNextMonth}
+          className="px-2 py-1 text-xs"
+        >
+          →
+        </Button>
+      </div>
+    </CardHeader>
+    <CardContent>
+      <div className="grid grid-cols-7 gap-2">
+        {getDaysInMonth(currentMonth).map((date) => {
+          const isCompleted = completedDates.includes(date);
+          return (
+            <div
+              key={date}
+              className={`w-8 h-8 rounded-lg transition-colors ${
+                isCompleted
+                  ? "bg-green-400 hover:bg-green-500"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              title={date}
+            />
+          );
+        })}
+      </div>
+
+      {/* Heatmap Legend */}
+      <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
+        <span>Less</span>
+        <div className="flex space-x-1">
+          <div className="w-3 h-3 bg-gray-100 rounded"></div>
+          <div className="w-3 h-3 bg-green-100 rounded"></div>
+          <div className="w-3 h-3 bg-green-200 rounded"></div>
+          <div className="w-3 h-3 bg-green-300 rounded"></div>
+          <div className="w-3 h-3 bg-green-400 rounded"></div>
+        </div>
+        <span>More</span>
+      </div>
+    </CardContent>
+  </Card>
+</div>
+
+
 
           {/* Analytics Charts */}
           <div className="grid md:grid-cols-2 gap-6">
