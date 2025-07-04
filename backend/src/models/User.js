@@ -24,27 +24,31 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    
-},{timestamps: true});  //createdAt, updatedAt
+    completedChallenges: {
+        type: Map,
+        of: Boolean,
+        default: {}, // Example: { '2025-07-04': true, '2025-07-03': true }
+    }
+}, { timestamps: true });  //createdAt, updatedAt
 
 //pre hook
 //password hashing - convert passsword to something gibberish
-userSchema.pre('save', async function(next){
+userSchema.pre('save', async function (next) {
 
-    if(!this.isModified('password')) return next(); //if password is not modified, skip hashing
+    if (!this.isModified('password')) return next(); //if password is not modified, skip hashing
 
-    try{
+    try {
         const salt = await bcrypt.genSalt(10); //10 is the number of rounds
         this.password = await bcrypt.hash(this.password, salt);
 
         next();
 
-    } catch (error){
+    } catch (error) {
         next(error);
     }
 })
 
-userSchema.methods.matchPassword = async function(enteredPassword){
+userSchema.methods.matchPassword = async function (enteredPassword) {
     const isPasswordCorrect = await bcrypt.compare(enteredPassword, this.password);
     return isPasswordCorrect;
 

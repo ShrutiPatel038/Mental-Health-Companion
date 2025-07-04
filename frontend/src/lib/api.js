@@ -25,3 +25,21 @@ export const getDailyChallenge = async (mood) => {
   return response.data; // returns { text: "...challenge..." }
 };
 
+// Get daily challenge for heatmap (renamed to avoid clash)
+export const getDailyChallengeForHeatmap = async (mood) => {
+  const res = await axios.get(`/daily-challenge?mood=${mood}`);
+  return res.data;
+};
+
+// Mark a specific date as complete
+export const markChallengeComplete = async (date) => {
+  const res = await axios.post('/challenge/complete', { date }); // e.g., '2025-07-04'
+  return res.data;
+};
+
+// Get completed dates for a specific month (e.g., '2025-07')
+export const getCompletedChallenges = async (month) => {
+  const res = await axios.get(`/challenge/completed?month=${month}`);
+  return res.data; // expected: ['2025-07-01', '2025-07-02', ...]
+};
+

@@ -1,52 +1,112 @@
-import ProtectedRoute from "@/Components/ProtectedRoute"
-import SidebarLayout from "@/Components/SidebarLayout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
-import { Button } from "@/Components/ui/button"
-import { Badge } from "@/Components/ui/badge"
-import { CheckCircle, Calendar, TrendingUp, Heart, Target } from "lucide-react"
-import { useEffect, useState } from "react"
-import useMoodStore from "@/store/useMoodStore"
-import { getDailyChallenge, markChallengeComplete } from "@/lib/api"
-
+import ProtectedRoute from "@/Components/ProtectedRoute";
+import SidebarLayout from "@/Components/SidebarLayout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/Components/ui/card";
+import { Button } from "@/Components/ui/button";
+import { Badge } from "@/Components/ui/badge";
+import { CheckCircle, Calendar, TrendingUp, Heart, Target } from "lucide-react";
+import { useEffect, useState } from "react";
+import useMoodStore from "@/store/useMoodStore";
+import { getDailyChallenge } from "@/lib/api";
+import { markChallengeComplete, getCompletedChallenges ,getDailyChallengeForHeatmap} from "@/lib/api";
+import axios from "axios";
 
 export default function DashboardPage() {
-  const [quote, setQuote] = useState('');
-  const [author, setAuthor] = useState('');
-  const [challenge, setChallenge] = useState('');
+  const [quote, setQuote] = useState("");
+  const [author, setAuthor] = useState("");
+  const [challenge, setChallenge] = useState("");
 
+  const fetchAffirmation = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5555/api/affirmation?ts=${Date.now()}`,
+        {
+          credentials: "include",
+        }
+      );
+      const data = await res.json();
+      setQuote(data[0].q);
+      setAuthor(data[0].a);
+    } catch (err) {
+      setQuote("Something went wrong. Try again later.");
+      setAuthor("");
+    }
+  };
 
-const fetchAffirmation = async () => {
-  try {
-    const res = await fetch(`http://localhost:5555/api/affirmation?ts=${Date.now()}`, {
-      credentials: 'include'
+  useEffect(() => {
+    fetchChallenge();
+  }, []);
+
+  const fetchChallenge = async () => {
+    try {
+      const data = await getDailyChallenge(mood);
+      setChallenge(data.text);
+    } catch (error) {
+      setChallenge("Couldn't load daily challenge.");
+    }
+  };
+
+  useEffect(() => {
+    fetchAffirmation();
+  }, []);
+
+  const [isCompletedToday, setIsCompletedToday] = useState(false);
+  const [completedDates, setCompletedDates] = useState([]);
+  const [currentMonth, setCurrentMonth] = useState(
+    new Date().toISOString().slice(0, 7) // 'YYYY-MM'
+  );
+
+  // Get all days of the current month
+  const getDaysInMonth = (month) => {
+    const [year, mon] = month.split("-").map(Number);
+    const days = new Date(year, mon, 0).getDate();
+    return Array.from({ length: days }, (_, i) => {
+      const day = String(i + 1).padStart(2, "0");
+      return `${month}-${day}`;
     });
-    const data = await res.json();
-    setQuote(data[0].q);
-    setAuthor(data[0].a);
-  } catch (err) {
-    setQuote('Something went wrong. Try again later.');
-    setAuthor('');
-  }
-};
+  };
 
-useEffect(() => {
-  fetchChallenge();
-}, []);
+  // Fetch all completed days for current month
+  const fetchCompletedDates = async () => {
+    const res = await getCompletedChallenges(currentMonth);
+    setCompletedDates(res);
+    const today = new Date().toISOString().slice(0, 10);
+    setIsCompletedToday(res.includes(today));
+  };
 
-const fetchChallenge = async () => {
-  try {
-    const data = await getDailyChallenge(mood);
-    setChallenge(data.text);
-  } catch (error) {
-    setChallenge("Couldn't load daily challenge.");
-  }
-};
+  useEffect(() => {
+    fetchCompletedDates();
+  }, [currentMonth]);
 
-useEffect(() => {
-  fetchAffirmation()
-}, [])
+  const { mood } = useMoodStore();
 
-const { mood } = useMoodStore();
+  const handleMarkComplete = async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      await markChallengeComplete(today);
+      setIsCompletedToday(true);
+      setCompletedDates((prev) => [...new Set([...prev, today])]);
+    } catch (error) {
+      console.error("Failed to mark as complete:", error);
+    }
+  };
+
+  const handlePrevMonth = () => {
+    const [year, month] = currentMonth.split("-").map(Number);
+    const newDate = new Date(year, month - 2); // JS months are 0-indexed
+    setCurrentMonth(newDate.toISOString().slice(0, 7));
+  };
+
+  const handleNextMonth = () => {
+    const [year, month] = currentMonth.split("-").map(Number);
+    const newDate = new Date(year, month); // next month
+    setCurrentMonth(newDate.toISOString().slice(0, 7));
+  };
 
   return (
     <ProtectedRoute>
@@ -57,7 +117,9 @@ const { mood } = useMoodStore();
             <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
               Your Mental Health Dashboard
             </h1>
-            <p className="text-gray-600">Track your progress and celebrate your journey</p>
+            <p className="text-gray-600">
+              Track your progress and celebrate your journey
+            </p>
           </div>
 
           {/* Affirmation Section */}
@@ -78,28 +140,27 @@ const { mood } = useMoodStore();
           </Card> */}
           <Card className="bg-gradient-to-r from-blue-100 to-purple-100 border-blue-300 rounded-3xl">
             <CardHeader>
-            <CardTitle className="text-xl font-bold text-blue-800 flex items-center">
-              <Heart className="w-6 h-6 mr-2" />
+              <CardTitle className="text-xl font-bold text-blue-800 flex items-center">
+                <Heart className="w-6 h-6 mr-2" />
                 Today's Affirmation
-            </CardTitle>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <blockquote className="text-lg italic text-blue-700 mb-4">
-              “{quote}”
-              <br />
-              <span className="block text-sm font-semibold text-right mt-2 text-blue-600">
-                — {author}
-              </span>
+                “{quote}”
+                <br />
+                <span className="block text-sm font-semibold text-right mt-2 text-blue-600">
+                  — {author}
+                </span>
               </blockquote>
-            <Button 
-              onClick={fetchAffirmation}
-              className="rounded-full bg-blue-500 hover:bg-blue-600"
-          >
-              Get New Affirmation
-            </Button>
+              <Button
+                onClick={fetchAffirmation}
+                className="rounded-full bg-blue-500 hover:bg-blue-600"
+              >
+                Get New Affirmation
+              </Button>
             </CardContent>
           </Card>
-
 
           {/* Daily Challenge Section
           <div className="grid md:grid-cols-2 gap-6">
@@ -124,8 +185,8 @@ const { mood } = useMoodStore();
               </CardContent>
             </Card>*/}
 
-            {/* Challenge Heatmap */}
-            {/* <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
+          {/* Challenge Heatmap */}
+          {/* <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
               <CardHeader>
                 <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
                   <Calendar className="w-6 h-6 mr-2 text-green-500" />
@@ -134,7 +195,7 @@ const { mood } = useMoodStore();
                 <CardDescription>Your consistency over the past month</CardDescription>
               </CardHeader>
               <CardContent> */}
-                {/* <div className="grid grid-cols-7 gap-2">
+          {/* <div className="grid grid-cols-7 gap-2">
                   {Array.from({ length: 28 }, (_, i) => (
                     <div
                       key={i}
@@ -145,10 +206,8 @@ const { mood } = useMoodStore();
                     />
                   ))}
                 </div> */}
-                
-    
 
-                {/* <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
+          {/* <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
                   <span>Less</span>
                   <div className="flex space-x-1">
                     <div className="w-3 h-3 bg-gray-100 rounded"></div>
@@ -164,101 +223,106 @@ const { mood } = useMoodStore();
           </div>  */}
 
           {/* Daily Challenge Section */}
-<div className="grid md:grid-cols-2 gap-6">
-  {/* Daily Challenge Card */}
-  <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
-    <CardHeader>
-      <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
-        <Target className="w-6 h-6 mr-2 text-orange-500" />
-        Today's Challenge
-      </CardTitle>
-      <CardDescription>Complete this to maintain your streak!</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="space-y-4">
-        <p className="text-gray-700 bg-orange-50 p-4 rounded-2xl">
-          {challenge || "Loading your daily challenge..."}
-        </p>
-        <Button
-          onClick={handleMarkComplete}
-          className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
-        >
-          <CheckCircle className="w-4 h-4 mr-2" />
-          Mark as Complete
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Daily Challenge Card */}
+            <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
+                  <Target className="w-6 h-6 mr-2 text-orange-500" />
+                  Today's Challenge
+                </CardTitle>
+                <CardDescription>
+                  Complete this to maintain your streak!
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <p className="text-gray-700 bg-orange-50 p-4 rounded-2xl">
+                    {challenge || "Loading your daily challenge..."}
+                  </p>
+                  <Button
+                    onClick={handleMarkComplete}
+                    disabled={isCompletedToday}
+                    className={`w-full rounded-2xl ${
+                      isCompletedToday
+                        ? "bg-green-400 cursor-not-allowed"
+                        : "bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500"
+                    }`}
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    {isCompletedToday ? "Completed" : "Mark as Complete"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-  {/* Heatmap Card */}
-  <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
-    <CardHeader className="flex justify-between items-center">
-      <div>
-        <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
-          <Calendar className="w-6 h-6 mr-2 text-green-500" />
-          Challenge Completion
-        </CardTitle>
-        <CardDescription>Your consistency this month</CardDescription>
-      </div>
-      {/* Month Nav */}
-      <div className="flex items-center space-x-2">
-        <Button
-          variant="ghost"
-          onClick={handlePrevMonth}
-          className="px-2 py-1 text-xs"
-        >
-          ←
-        </Button>
-        <span className="text-sm font-semibold text-gray-700">
-          {new Date(currentMonth + "-01").toLocaleString("default", {
-            month: "long",
-            year: "numeric",
-          })}
-        </span>
-        <Button
-          variant="ghost"
-          onClick={handleNextMonth}
-          className="px-2 py-1 text-xs"
-        >
-          →
-        </Button>
-      </div>
-    </CardHeader>
-    <CardContent>
-      <div className="grid grid-cols-7 gap-2">
-        {getDaysInMonth(currentMonth).map((date) => {
-          const isCompleted = completedDates.includes(date);
-          return (
-            <div
-              key={date}
-              className={`w-8 h-8 rounded-lg transition-colors ${
-                isCompleted
-                  ? "bg-green-400 hover:bg-green-500"
-                  : "bg-gray-200 hover:bg-gray-300"
-              }`}
-              title={date}
-            />
-          );
-        })}
-      </div>
+            {/* Heatmap Card */}
+            <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
+              <CardHeader className="flex justify-between items-center">
+                <div>
+                  <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
+                    <Calendar className="w-6 h-6 mr-2 text-green-500" />
+                    Challenge Completion
+                  </CardTitle>
+                  <CardDescription>Your consistency this month</CardDescription>
+                </div>
+                {/* Month Nav */}
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    onClick={handlePrevMonth}
+                    className="px-2 py-1 text-xs"
+                  >
+                    ←
+                  </Button>
+                  <span className="text-sm font-semibold text-gray-700">
+                    {new Date(currentMonth + "-01").toLocaleString("default", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    onClick={handleNextMonth}
+                    className="px-2 py-1 text-xs"
+                  >
+                    →
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-7 gap-2">
+                  {getDaysInMonth(currentMonth).map((date) => {
+                    const isCompleted = completedDates.includes(date);
+                    return (
+                      <div
+                        key={date}
+                        className={`w-8 h-8 rounded-lg transition-colors ${
+                          isCompleted
+                            ? "bg-green-400 hover:bg-green-500"
+                            : "bg-gray-200 hover:bg-gray-300"
+                        }`}
+                        title={date}
+                      />
+                    );
+                  })}
+                </div>
 
-      {/* Heatmap Legend */}
-      <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-        <span>Less</span>
-        <div className="flex space-x-1">
-          <div className="w-3 h-3 bg-gray-100 rounded"></div>
-          <div className="w-3 h-3 bg-green-100 rounded"></div>
-          <div className="w-3 h-3 bg-green-200 rounded"></div>
-          <div className="w-3 h-3 bg-green-300 rounded"></div>
-          <div className="w-3 h-3 bg-green-400 rounded"></div>
-        </div>
-        <span>More</span>
-      </div>
-    </CardContent>
-  </Card>
-</div>
-
-
+                {/* Heatmap Legend */}
+                <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
+                  <span>Less</span>
+                  <div className="flex space-x-1">
+                    <div className="w-3 h-3 bg-gray-100 rounded"></div>
+                    <div className="w-3 h-3 bg-green-100 rounded"></div>
+                    <div className="w-3 h-3 bg-green-200 rounded"></div>
+                    <div className="w-3 h-3 bg-green-300 rounded"></div>
+                    <div className="w-3 h-3 bg-green-400 rounded"></div>
+                  </div>
+                  <span>More</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           {/* Analytics Charts */}
           <div className="grid md:grid-cols-2 gap-6">
@@ -269,17 +333,24 @@ const { mood } = useMoodStore();
                   <TrendingUp className="w-6 h-6 mr-2 text-blue-500" />
                   Mood Trends
                 </CardTitle>
-                <CardDescription>Your emotional journey over the past week</CardDescription>
+                <CardDescription>
+                  Your emotional journey over the past week
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-48 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl flex items-center justify-center">
-                  <p className="text-gray-500">Mood chart visualization would go here</p>
+                  <p className="text-gray-500">
+                    Mood chart visualization would go here
+                  </p>
                 </div>
                 <div className="mt-4 flex justify-between text-sm">
                   <Badge variant="outline" className="rounded-full">
                     Avg: 4.2/5
                   </Badge>
-                  <Badge variant="outline" className="rounded-full text-green-600">
+                  <Badge
+                    variant="outline"
+                    className="rounded-full text-green-600"
+                  >
                     ↗ Improving
                   </Badge>
                 </div>
@@ -289,14 +360,26 @@ const { mood } = useMoodStore();
             {/* Activity Engagement */}
             <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
               <CardHeader>
-                <CardTitle className="text-xl font-bold text-gray-800">Activity Engagement</CardTitle>
-                <CardDescription>Your most used self-help modules</CardDescription>
+                <CardTitle className="text-xl font-bold text-gray-800">
+                  Activity Engagement
+                </CardTitle>
+                <CardDescription>
+                  Your most used self-help modules
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { name: "Breathing Exercises", usage: 85, color: "bg-blue-400" },
-                    { name: "Gratitude Journal", usage: 72, color: "bg-green-400" },
+                    {
+                      name: "Breathing Exercises",
+                      usage: 85,
+                      color: "bg-blue-400",
+                    },
+                    {
+                      name: "Gratitude Journal",
+                      usage: 72,
+                      color: "bg-green-400",
+                    },
                     { name: "Mindfulness", usage: 68, color: "bg-purple-400" },
                     { name: "Mood Tracking", usage: 91, color: "bg-pink-400" },
                   ].map((activity) => (
@@ -320,5 +403,5 @@ const { mood } = useMoodStore();
         </div>
       </SidebarLayout>
     </ProtectedRoute>
-  )
+  );
 }

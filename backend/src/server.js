@@ -3,6 +3,8 @@ import 'dotenv/config'      // to load environment variables from .env file auto
 import authRoutes from './routes/auth.route.js'  // import auth routes
 import affirmationRoutes from './routes/affirmation.route.js'
 import geminiRoutes from './routes/gemini.route.js'  // import gemini routes
+import challengeRoutes from './routes/challenge.route.js'; 
+
 
 
 import cors from 'cors'  // to enable CORS for the API
@@ -20,9 +22,11 @@ app.use(cors({
 app.use(express.json());  // to parse JSON request body
 app.use(cookieParser());  // to parse cookies in request
 
+
 app.use('/api/auth',authRoutes);        // import auth routes
 app.use('/api/affirmation', affirmationRoutes);
 app.use('/api/gemini',geminiRoutes);
+app.use('/api/challenge',challengeRoutes);
 
 
 app.listen(PORT , () => {
