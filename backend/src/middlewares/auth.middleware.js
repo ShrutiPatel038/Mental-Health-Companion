@@ -1,17 +1,24 @@
-// middlewares/authMiddleware.js
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
-export function authenticateUser(req, res, next) {
-  const token = req.cookies.jwt
+export const authenticateUser = (req, res, next) => {
+  const token = req.cookies.jwt; // ✅ using cookies
+
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' })
+    console.log("❌ No token in cookies");
+    return res.status(401).json({ message: "Not authenticated" });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    req.user = decoded // this sets req.user.userId = decoded.userId
-    next()
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    console.log("✅ Decoded token:", decoded);
+    req.user = {
+  _id: decoded.userId,
+  userId: decoded.userId,
+  email: decoded.email,
+}; // ✅ important
+    next();
   } catch (err) {
-    return res.status(401).json({ message: 'Token is not valid' })
+    console.error("❌ Token verification failed:", err.message);
+    return res.status(401).json({ message: "Invalid token" });
   }
-}
+};

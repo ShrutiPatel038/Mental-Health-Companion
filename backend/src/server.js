@@ -27,6 +27,7 @@ app.use('/api/auth',authRoutes);        // import auth routes
 app.use('/api/affirmation', affirmationRoutes);
 app.use('/api/gemini',geminiRoutes);
 app.use('/api/challenge',challengeRoutes);
+console.log("Routes initialized successfully");
 
 
 app.listen(PORT , () => {

@@ -71,13 +71,15 @@ export default function DashboardPage() {
     });
   };
 
+
   // Fetch all completed days for current month
-  const fetchCompletedDates = async () => {
-    const res = await getCompletedChallenges(currentMonth);
-    setCompletedDates(res);
-    const today = new Date().toISOString().slice(0, 10);
-    setIsCompletedToday(res.includes(today));
-  };
+   const fetchCompletedDates = async () => {
+     const res = await getCompletedChallenges(currentMonth);
+     setCompletedDates(res);
+   console.log("Completed dates for month:", currentMonth, res);
+     const today = new Date().toISOString().slice(0, 10);
+     setIsCompletedToday(res.includes(today));
+   };
 
   useEffect(() => {
     fetchCompletedDates();

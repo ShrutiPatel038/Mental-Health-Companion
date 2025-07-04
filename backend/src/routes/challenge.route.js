@@ -24,20 +24,31 @@ router.post('/complete', authenticateUser, async (req, res) => {
 });
 
 router.get('/completed', authenticateUser, async (req, res) => {
-  const userId = req.user._id;
-  const { month } = req.query; // "2025-07"
+  const userId = req.user?._id;
+  const { month } = req.query;
 
   if (!month) return res.status(400).json({ message: "Month is required" });
 
   try {
     const user = await User.findById(userId);
-    const allDates = Array.from(user.completedChallenges.keys());
+
+    if (!user) {
+      console.error("User not found for ID:", userId);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const completed = user.completedChallenges || new Map();
+
+    // convert Map to plain object if needed
+    const allDates = Array.from(completed.keys()).filter(key => typeof key === 'string');
 
     const filteredDates = allDates.filter(date => date.startsWith(month));
+
+    console.log(`Found ${filteredDates.length} completed dates for month ${month}`);
     res.status(200).json(filteredDates);
   } catch (err) {
-    console.error("Error fetching completed challenges:", err);
-    res.status(500).json({ message: 'Server error' });
+    console.error("❌ Error in /completed route:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
