@@ -9,6 +9,7 @@ import AboutUsPage from "./pages/AboutUsPage"
 import ContactUsPage from "./pages/ContactUsPage"
 import NotFoundPage from "./pages/NotFoundPage"
 import LogoutPage from "./pages/LogoutPage"
+import Breathing from "./pages/Breathing"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path="/contact-us" element={<ContactUsPage />} />
       <Route path="/logout" element={<LogoutPage />} />
       <Route path="*" element={<NotFoundPage />} />
+      <Route path="/breathing-exercise" element={<Breathing />} />
     </Routes>
   )
 }

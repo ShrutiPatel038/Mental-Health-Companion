@@ -5,6 +5,7 @@ import { Button } from "@/Components/ui/button"
 import { Progress } from "@/Components/ui/progress"
 import { Badge } from "@/Components/ui/badge"
 import { Heart, Wind, BookOpen, Anchor, Sparkles, Shield, Brain, Moon, Clock, RefreshCw } from "lucide-react"
+import { Link } from "react-router"
 
 const modules = [
   {
@@ -29,8 +30,8 @@ const modules = [
   },
   {
     id: 3,
-    title: "Automatic Negative Thoughts (ANTs) tracker",
-    description: "User inputs a thought → you return restructured thought using a small AI assistant.",
+    title: "Grounding Techniques",
+    description: "Stay present and centered with the 5-4-3-2-1 technique and other grounding methods.",
     icon: Anchor,
     progress: 60,
     color: "from-purple-400 to-purple-600",
@@ -39,16 +40,6 @@ const modules = [
   },
   {
     id: 4,
-    title: "Soothing Sounds/White Noise",
-    description: "Rainfall, ocean waves, forest sounds",
-    icon: Heart,
-    progress: 20,
-    color: "from-pink-400 to-rose-500",
-    bgColor: "from-pink-50 to-rose-100",
-    difficulty: "Intermediate",
-  },
-  {
-    id: 5,
     title: "Gratitude Practice",
     description: "Cultivate positivity and appreciation through daily gratitude exercises.",
     icon: Sparkles,
@@ -58,18 +49,25 @@ const modules = [
     difficulty: "Beginner",
   },
   {
-    id: 6,
+    id: 5,
     title: "Anxiety Coping Toolkit",
     description: "Practical strategies and techniques to manage anxiety in daily life.",
     icon: Shield,
     progress: 30,
-    color: "from-indigo-400 to-purple-500",
-    bgColor: "from-indigo-50 to-purple-100",
+    color: "from-red-400 to-pink-500",
+    bgColor: "from-red-50 to-pink-100",
     difficulty: "Intermediate",
   },
-  
-  
-  
+  {
+    id: 6,
+    title: "Self-Esteem Booster",
+    description: "Build confidence and self-worth through positive affirmations and exercises.",
+    icon: Heart,
+    progress: 20,
+    color: "from-pink-400 to-rose-500",
+    bgColor: "from-pink-50 to-rose-100",
+    difficulty: "Intermediate",
+  }
 ]
 
 const getDifficultyColor = (difficulty) => {
@@ -101,10 +99,9 @@ export default function SelfHelpPage() {
             </p>
           </div>
 
-          
 
           {/* Modules Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {modules.map((module) => {
               const IconComponent = module.icon
               return (
@@ -119,7 +116,9 @@ export default function SelfHelpPage() {
                       >
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
-                      
+                      <Badge className={`${getDifficultyColor(module.difficulty)} rounded-full text-xs`}>
+                        {module.difficulty}
+                      </Badge>
                     </div>
                     <CardTitle className="text-lg font-bold text-gray-800 leading-tight">{module.title}</CardTitle>
                     <CardDescription className="text-gray-600 text-sm leading-relaxed">
@@ -130,14 +129,23 @@ export default function SelfHelpPage() {
                   <CardContent className="pt-0">
                     <div className="space-y-4">
                       
-                      
 
                       {/* Action Button */}
-                      <Button
-                        className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
-                      >
-                        Start
-                      </Button>
+                      {module.id === 1 ? (
+                        <Link to="/breathing-exercise">
+                          <Button
+                            className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                          >
+                            {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button
+                          className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                        >
+                          {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
