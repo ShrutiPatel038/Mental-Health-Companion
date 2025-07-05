@@ -43,6 +43,16 @@ export default function SidebarLayout({ children }) {
     navigate("/login")
   }
 
+    const getInitials = (name) => {
+    if (!name) return "U"
+    const words = name.trim().split(" ")
+    if (words.length === 1) {
+      return words[0][0].toUpperCase()
+    }
+    return (words[0][0] + words[1][0]).toUpperCase()
+  }
+
+
   return (
     <div className="flex h-screen bg-gradient-to-br from-orange-50 via-purple-50 to-pink-50">
       {/* Mobile sidebar overlay */}
@@ -106,7 +116,7 @@ export default function SidebarLayout({ children }) {
                 <Avatar className="w-10 h-10 ring-2 ring-orange-300">
                   <AvatarImage src="/placeholder.svg?height=40&width=40" />
                   <AvatarFallback className="bg-gradient-to-r from-orange-400 to-pink-400 text-white">
-                    JD
+                    {getInitials(username)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
