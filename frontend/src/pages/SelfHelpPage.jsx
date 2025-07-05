@@ -29,8 +29,8 @@ const modules = [
   },
   {
     id: 3,
-    title: "Grounding Techniques",
-    description: "Stay present and centered with the 5-4-3-2-1 technique and other grounding methods.",
+    title: "Automatic Negative Thoughts (ANTs) tracker",
+    description: "User inputs a thought → you return restructured thought using a small AI assistant.",
     icon: Anchor,
     progress: 60,
     color: "from-purple-400 to-purple-600",
@@ -39,6 +39,16 @@ const modules = [
   },
   {
     id: 4,
+    title: "Soothing Sounds/White Noise",
+    description: "Rainfall, ocean waves, forest sounds",
+    icon: Heart,
+    progress: 20,
+    color: "from-pink-400 to-rose-500",
+    bgColor: "from-pink-50 to-rose-100",
+    difficulty: "Intermediate",
+  },
+  {
+    id: 5,
     title: "Gratitude Practice",
     description: "Cultivate positivity and appreciation through daily gratitude exercises.",
     icon: Sparkles,
@@ -48,65 +58,18 @@ const modules = [
     difficulty: "Beginner",
   },
   {
-    id: 5,
+    id: 6,
     title: "Anxiety Coping Toolkit",
     description: "Practical strategies and techniques to manage anxiety in daily life.",
     icon: Shield,
     progress: 30,
-    color: "from-red-400 to-pink-500",
-    bgColor: "from-red-50 to-pink-100",
-    difficulty: "Intermediate",
-  },
-  {
-    id: 6,
-    title: "Self-Esteem Booster",
-    description: "Build confidence and self-worth through positive affirmations and exercises.",
-    icon: Heart,
-    progress: 20,
-    color: "from-pink-400 to-rose-500",
-    bgColor: "from-pink-50 to-rose-100",
-    difficulty: "Intermediate",
-  },
-  {
-    id: 7,
-    title: "Mindfulness Meditations",
-    description: "Practice mindfulness and meditation to improve focus and reduce stress.",
-    icon: Brain,
-    progress: 55,
     color: "from-indigo-400 to-purple-500",
     bgColor: "from-indigo-50 to-purple-100",
-    difficulty: "Advanced",
-  },
-  {
-    id: 8,
-    title: "Sleep Hygiene Tracker",
-    description: "Improve your sleep quality with healthy bedtime routines and habits.",
-    icon: Moon,
-    progress: 40,
-    color: "from-slate-400 to-slate-600",
-    bgColor: "from-slate-50 to-slate-100",
-    difficulty: "Beginner",
-  },
-  {
-    id: 9,
-    title: "Time Management Aid",
-    description: "Organize your day and reduce overwhelm with effective time management strategies.",
-    icon: Clock,
-    progress: 15,
-    color: "from-teal-400 to-cyan-500",
-    bgColor: "from-teal-50 to-cyan-100",
     difficulty: "Intermediate",
   },
-  {
-    id: 10,
-    title: "Thought Reframing Workshop",
-    description: "Transform negative thought patterns into positive, constructive thinking.",
-    icon: RefreshCw,
-    progress: 0,
-    color: "from-emerald-400 to-green-500",
-    bgColor: "from-emerald-50 to-green-100",
-    difficulty: "Advanced",
-  },
+  
+  
+  
 ]
 
 const getDifficultyColor = (difficulty) => {
@@ -138,20 +101,10 @@ export default function SelfHelpPage() {
             </p>
           </div>
 
-          {/* Progress Overview */}
-          <Card className="bg-gradient-to-r from-purple-100 to-pink-100 border-purple-300 rounded-3xl">
-            <CardContent className="p-6">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-purple-800 mb-2">Your Learning Progress</h3>
-                <p className="text-purple-600 mb-4">You've completed 4 out of 10 modules</p>
-                <Progress value={40} className="w-full max-w-md mx-auto h-3 rounded-full" />
-                <p className="text-sm text-purple-600 mt-2">Keep going! You're doing amazing! 🎉</p>
-              </div>
-            </CardContent>
-          </Card>
+          
 
           {/* Modules Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
             {modules.map((module) => {
               const IconComponent = module.icon
               return (
@@ -166,9 +119,7 @@ export default function SelfHelpPage() {
                       >
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
-                      <Badge className={`${getDifficultyColor(module.difficulty)} rounded-full text-xs`}>
-                        {module.difficulty}
-                      </Badge>
+                      
                     </div>
                     <CardTitle className="text-lg font-bold text-gray-800 leading-tight">{module.title}</CardTitle>
                     <CardDescription className="text-gray-600 text-sm leading-relaxed">
@@ -178,20 +129,14 @@ export default function SelfHelpPage() {
 
                   <CardContent className="pt-0">
                     <div className="space-y-4">
-                      {/* Progress */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Progress</span>
-                          <span className="font-medium text-gray-800">{module.progress}%</span>
-                        </div>
-                        <Progress value={module.progress} className="h-2 rounded-full" />
-                      </div>
+                      
+                      
 
                       {/* Action Button */}
                       <Button
                         className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
                       >
-                        {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
+                        Start
                       </Button>
                     </div>
                   </CardContent>

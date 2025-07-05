@@ -20,6 +20,8 @@ export default function DashboardPage() {
   const [quote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
   const [challenge, setChallenge] = useState("");
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  const todayMonth = today.slice(0, 7); // YYYY-MM
 
   const fetchAffirmation = async () => {
     try {
@@ -73,22 +75,24 @@ export default function DashboardPage() {
 
 
   // Fetch all completed days for current month
-   const fetchCompletedDates = async () => {
-     const res = await getCompletedChallenges(currentMonth);
-     setCompletedDates(res);
-   console.log("Completed dates for month:", currentMonth, res);
-     const today = new Date().toISOString().slice(0, 10);
-     setIsCompletedToday(res.includes(today));
-   };
+   const fetchCompletedDates = async (month) => {
+  try {
+    const res = await getCompletedChallenges(month);
+    setCompletedDates(res);
+  } catch (err) {
+    console.error("Error fetching completed dates:", err);
+  }
+};
+
 
   useEffect(() => {
-    fetchCompletedDates();
+    fetchCompletedDates(currentMonth); //for heatmap only
   }, [currentMonth]);
 
   const { mood } = useMoodStore();
 
   const handleMarkComplete = async () => {
-    const today = new Date().toISOString().slice(0, 10);
+    
     try {
       await markChallengeComplete(today);
       setIsCompletedToday(true);
@@ -100,15 +104,28 @@ export default function DashboardPage() {
 
   const handlePrevMonth = () => {
     const [year, month] = currentMonth.split("-").map(Number);
-    const newDate = new Date(year, month - 2); // JS months are 0-indexed
+    const newDate = new Date(year, month - 1); // JS months are 0-indexed
     setCurrentMonth(newDate.toISOString().slice(0, 7));
   };
 
   const handleNextMonth = () => {
     const [year, month] = currentMonth.split("-").map(Number);
-    const newDate = new Date(year, month); // next month
+    const newDate = new Date(year, month+1); // next month
     setCurrentMonth(newDate.toISOString().slice(0, 7));
   };
+  useEffect(() => {
+  checkTodayCompletion();
+}, []); // on initial render only
+
+const checkTodayCompletion = async () => {
+  try {
+    const res = await getCompletedChallenges(todayMonth);
+    setIsCompletedToday(res.includes(today));
+  } catch (err) {
+    console.error("Error checking today's completion:", err);
+  }
+};
+
 
   return (
     <ProtectedRoute>
@@ -163,66 +180,6 @@ export default function DashboardPage() {
               </Button>
             </CardContent>
           </Card>
-
-          {/* Daily Challenge Section
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
-                  <Target className="w-6 h-6 mr-2 text-orange-500" />
-                  Today's Challenge
-                </CardTitle>
-                <CardDescription>Complete this to maintain your streak!</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <p className="text-gray-700 bg-orange-50 p-4 rounded-2xl">
-                    {challenge || "Loading your daily challenge..."}
-                  </p>
-                  <Button onClick={handleComplete} className="w-full rounded-2xl bg-gradient-to-r from-orange-400 to-pink-400 hover:from-orange-500 hover:to-pink-500">
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Mark as Complete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>*/}
-
-          {/* Challenge Heatmap */}
-          {/* <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold text-gray-800 flex items-center">
-                  <Calendar className="w-6 h-6 mr-2 text-green-500" />
-                  Challenge Completion
-                </CardTitle>
-                <CardDescription>Your consistency over the past month</CardDescription>
-              </CardHeader>
-              <CardContent> */}
-          {/* <div className="grid grid-cols-7 gap-2">
-                  {Array.from({ length: 28 }, (_, i) => (
-                    <div
-                      key={i}
-                      className={`w-8 h-8 rounded-lg ${
-                        Math.random() > 0.3 ? "bg-green-200 hover:bg-green-300" : "bg-gray-100 hover:bg-gray-200"
-                      } transition-colors cursor-pointer`}
-                      title={`Day ${i + 1}`}
-                    />
-                  ))}
-                </div> */}
-
-          {/* <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-                  <span>Less</span>
-                  <div className="flex space-x-1">
-                    <div className="w-3 h-3 bg-gray-100 rounded"></div>
-                    <div className="w-3 h-3 bg-green-100 rounded"></div>
-                    <div className="w-3 h-3 bg-green-200 rounded"></div>
-                    <div className="w-3 h-3 bg-green-300 rounded"></div>
-                    <div className="w-3 h-3 bg-green-400 rounded"></div>
-                  </div>
-                  <span>More</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>  */}
 
           {/* Daily Challenge Section */}
           <div className="grid md:grid-cols-2 gap-6">
@@ -311,17 +268,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Heatmap Legend */}
-                <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-                  <span>Less</span>
-                  <div className="flex space-x-1">
-                    <div className="w-3 h-3 bg-gray-100 rounded"></div>
-                    <div className="w-3 h-3 bg-green-100 rounded"></div>
-                    <div className="w-3 h-3 bg-green-200 rounded"></div>
-                    <div className="w-3 h-3 bg-green-300 rounded"></div>
-                    <div className="w-3 h-3 bg-green-400 rounded"></div>
-                  </div>
-                  <span>More</span>
-                </div>
+                
               </CardContent>
             </Card>
           </div>

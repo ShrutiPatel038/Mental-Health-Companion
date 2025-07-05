@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema({
         type: Map,
         of: Boolean,
         default: {}, // Example: { '2025-07-04': true, '2025-07-03': true }
+    },
+    dailyChallenges: {
+        type: Map,
+        of: String,
+        default: {},
     }
 }, { timestamps: true });  //createdAt, updatedAt
 
