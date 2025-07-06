@@ -139,6 +139,14 @@ export default function SelfHelpPage() {
                             {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
                           </Button>
                         </Link>
+                      ) : module.id === 4 ? (
+                        <Link href="/gratitude-journal">
+                          <Button
+                            className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                          >
+                            {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
+                          </Button>
+                        </Link>
                       ) : (
                         <Button
                           className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}

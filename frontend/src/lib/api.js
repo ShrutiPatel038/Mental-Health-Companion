@@ -43,3 +43,7 @@ export const getCompletedChallenges = async (month) => {
   return res.data; // expected: ['2025-07-01', '2025-07-02', ...]
 };
 
+export const getGratitudePrompt = async () => {
+  const response = await axiosInstance.post("/gratitude-journal");
+  return response.data; // returns { text: "...gratitude prompt..." }
+};
