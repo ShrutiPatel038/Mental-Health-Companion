@@ -6,6 +6,8 @@ import { Progress } from "@/Components/ui/progress"
 import { Badge } from "@/Components/ui/badge"
 import { Heart, Wind, BookOpen, Anchor, Sparkles, Shield, Brain, Moon, Clock, RefreshCw } from "lucide-react"
 import { Link } from "react-router"
+import { useNavigate } from "react-router-dom"
+
 
 const modules = [
   {
@@ -30,8 +32,8 @@ const modules = [
   },
   {
     id: 3,
-    title: "Grounding Techniques",
-    description: "Stay present and centered with the 5-4-3-2-1 technique and other grounding methods.",
+    title: "Thought reframing tool",
+    description: "Transform negative thoughts into positive ones.",
     icon: Anchor,
     progress: 60,
     color: "from-purple-400 to-purple-600",
@@ -40,8 +42,8 @@ const modules = [
   },
   {
     id: 4,
-    title: "Gratitude Practice",
-    description: "Cultivate positivity and appreciation through daily gratitude exercises.",
+    title: "Soothing sounds ",
+    description: "Relax with calming music and nature sounds to enhance your mood.",
     icon: Sparkles,
     progress: 90,
     color: "from-yellow-400 to-orange-500",
@@ -84,6 +86,15 @@ const getDifficultyColor = (difficulty) => {
 }
 
 export default function SelfHelpPage() {
+
+    const navigate = useNavigate()
+
+    const handleStartChallenge = () => {
+    navigate('/self-help/soothing-sounds');
+  }
+    const handle2ndChallenge = () => {
+    navigate('/self-help/gratitude-journal');
+  }
   return (
     <ProtectedRoute>
       <SidebarLayout>
@@ -116,9 +127,9 @@ export default function SelfHelpPage() {
                       >
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
-                      <Badge className={`${getDifficultyColor(module.difficulty)} rounded-full text-xs`}>
+                      {/* <Badge className={`${getDifficultyColor(module.difficulty)} rounded-full text-xs`}>
                         {module.difficulty}
-                      </Badge>
+                      </Badge> */}
                     </div>
                     <CardTitle className="text-lg font-bold text-gray-800 leading-tight">{module.title}</CardTitle>
                     <CardDescription className="text-gray-600 text-sm leading-relaxed">
@@ -128,33 +139,39 @@ export default function SelfHelpPage() {
 
                   <CardContent className="pt-0">
                     <div className="space-y-4">
-                      
-
-                      {/* Action Button */}
-                      {module.id === 1 ? (
-                        <Link to="/breathing-exercise">
-                          <Button
-                            className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
-                          >
-                            {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
-                          </Button>
-                        </Link>
-                      ) : module.id === 4 ? (
-                        <Link href="/gratitude-journal">
-                          <Button
-                            className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
-                          >
-                            {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
-                          </Button>
-                        </Link>
-                      ) : (
+                    {/* Action Button */}
+                    {module.id === 1 ? (
+                      <Link to="/breathing-exercise">
                         <Button
                           className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
                         >
-                          {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
+                          Start
                         </Button>
-                      )}
-                    </div>
+                      </Link>
+                    )  : module.id === 2 ? (
+                      <Link to="/gratitude-journal">
+                        <Button
+                          className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                        >
+                          Start
+                        </Button>
+                      </Link>
+                    ) : module.id === 4 ? (
+                      <Link to="/soothing-sounds">
+                        <Button
+                          className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                        >
+                          Start
+                        </Button>
+                      </Link>
+                    ) :(
+                      <Button
+                        className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                      >
+                        {module.progress === 0 ? "Start Module" : module.progress === 100 ? "Review" : "Continue"}
+                      </Button>
+                    )}
+                  </div>
                   </CardContent>
                 </Card>
               )

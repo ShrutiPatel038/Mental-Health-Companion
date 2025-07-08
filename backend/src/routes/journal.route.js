@@ -1,11 +1,14 @@
+import express from "express";
 import { GoogleGenAI } from "@google/genai";
 
+const router = express.Router();
+
+// Initialize Gemini AI
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+console.log("GEMINI_API_KEY:", process.env.GEMINI_API_KEY);
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).send("Method Not Allowed");
-
-  const text = `
+router.post("/", async (req, res) => {
+  const prompt = `
 Generate a journaling prompt starting with "Write 3 things".
 
 Requirements:
@@ -17,19 +20,41 @@ Requirements:
 `;
 
   try {
-    const model = ai.getGenerativeModel({ model: "gemini-pro" }); // or gemini-1.5-pro
-    const result = await model.generateContent(text);
-    const response = await result.response;
-    const text = response.text().trim();
+     const result = await ai.models.generateContent({
+  model: "models/gemini-1.5-flash",
+  temperature: 1.0,
+  contents: [
+    {
+      role: "user",
+      parts: [{ text: prompt.trim() }],
+    },
+  ],
+  
+});
+    console.log("Final prompt:", prompt.trim());
 
-    res.status(200).json({ text: text });
+    const text = result?.candidates?.[0]?.content?.parts
+  ?.map((p) => p.text)
+  ?.join(" ")
+  ?.trim();
+
+    console.log("Generated prompt:", text);
+    res.status(200).json({ text, raw: JSON.stringify(result, null, 2) });
+
   } catch (err) {
     console.error("Gemini error:", err);
 
-    // fallback journaling prompt
+    if (err.response) {
+    console.error("Response error:", err.response.data);
+  } else {
+    console.error("Error message:", err.message);
+  }
+
     const fallbackPrompt =
       "Write 3 things you experienced today that brought you even a little bit of peace or joy.";
 
     res.status(500).json({ text: fallbackPrompt });
   }
-}
+});
+
+export default router;

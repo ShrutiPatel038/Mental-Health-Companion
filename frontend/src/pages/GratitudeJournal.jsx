@@ -4,6 +4,7 @@ import { Button } from "@/Components/ui/button"
 import { Card, CardContent } from "@/Components/ui/card"
 import { Textarea } from "@/Components/ui/textarea"
 import { ArrowLeft, Save, RefreshCw, Sparkles, Heart, Loader2 } from "lucide-react"
+import { getGratitudePrompt } from "@/lib/api"
 
 export default function GratitudeJournal() {
   const router = useNavigate()
@@ -25,9 +26,10 @@ export default function GratitudeJournal() {
       setChallenge(data.text);
     } catch (error) {
       setChallenge("Couldn't load gratitude prompt. Please try again later.");
+    }finally {
+    setIsLoading(false); // ✅ Stop spinner
+  }
   }
-
-}
 
   
 
