@@ -7,14 +7,18 @@ import { ArrowLeft, Save, RefreshCw, Sparkles, Heart, Loader2 } from "lucide-rea
 import { getGratitudePrompt } from "@/lib/api"
 
 export default function GratitudeJournal() {
-  const router = useNavigate()
+  const navigate = useNavigate()
   const [challenge,setChallenge] = useState("Loading gratitude prompt...")
   const [prompt, setPrompt] = useState("")
   const [entries, setEntries] = useState(["", "", ""])
   const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [savedMessage, setSavedMessage] = useState("")
+
+  const handleEntryChange = (index, value) => {
+  const newEntries = [...entries];
+  newEntries[index] = value;
+  setEntries(newEntries);
+};
 
   useEffect(() => {
     fetchPrompt()
@@ -40,7 +44,7 @@ export default function GratitudeJournal() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={() => router.push("/self-help")}
+            onClick={() => navigate("/self-help")}
             className="rounded-full hover:bg-purple-100"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

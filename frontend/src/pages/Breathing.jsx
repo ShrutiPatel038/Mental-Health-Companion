@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import { Button } from "@/Components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select"
@@ -29,7 +29,7 @@ const phases = {
 }
 
 export default function Breathing() {
-  const router = useNavigate()
+  const navigate = useNavigate()
   const [mode, setMode] = useState("normal")
   const [duration, setDuration] = useState(5)
   const [isActive, setIsActive] = useState(false)
@@ -185,7 +185,7 @@ export default function Breathing() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => router.push("/self-help")}
+                onClick={() => navigate("/self-help")}
                 className="w-full rounded-2xl border-2 border-green-300 hover:bg-green-50"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -212,7 +212,7 @@ export default function Breathing() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={() => router.push("/self-help")}
+            onClick={() => navigate("/self-help")}
             className="rounded-full text-white hover:bg-white/20"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
