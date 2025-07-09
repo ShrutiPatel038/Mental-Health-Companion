@@ -52,7 +52,7 @@ const modules = [
   },
   {
     id: 5,
-    title: "Anxiety Coping Toolkit",
+    title: "Chat with Ember",
     description: "Practical strategies and techniques to manage anxiety in daily life.",
     icon: Shield,
     progress: 30,
@@ -158,6 +158,14 @@ export default function SelfHelpPage() {
                       </Link>
                     ) : module.id === 4 ? (
                       <Link to="/soothing-sounds">
+                        <Button
+                          className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                        >
+                          Start
+                        </Button>
+                      </Link>
+                    ) : module.id === 5 ? (
+                      <Link to="/chatbot">
                         <Button
                           className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
                         >

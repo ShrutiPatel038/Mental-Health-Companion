@@ -47,3 +47,9 @@ export const getGratitudePrompt = async () => {
   const response = await axiosInstance.post("/gratitude-journal");
   return response.data; // returns { text: "...gratitude prompt..." }
 };
+
+export const sendChatMessage = async (prompt) => {
+  const response = await axiosInstance.post("/chatbot", { prompt });
+  return response.data; // { reply: "..." }
+};
+

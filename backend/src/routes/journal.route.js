@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Initialize Gemini AI
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-console.log("GEMINI_API_KEY:", process.env.GEMINI_API_KEY);
+
 
 router.post("/", async (req, res) => {
   const prompt = `

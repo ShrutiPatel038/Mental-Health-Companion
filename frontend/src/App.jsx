@@ -12,6 +12,7 @@ import LogoutPage from "./pages/LogoutPage"
 import Breathing from "./pages/Breathing"
 import GratitudeJournal from "./pages/GratitudeJournal"
 import SoothingSoundsPage from "./pages/SoothingSoundsPage"
+import Chatbot from "./pages/Chatbot"
 function App() {
   return (
     <Routes>
@@ -28,6 +29,8 @@ function App() {
       <Route path="/breathing-exercise" element={<Breathing />} />
       <Route path="/gratitude-journal" element={<GratitudeJournal/>}/>
       <Route path="/soothing-sounds" element={<SoothingSoundsPage/>}/>
+      <Route path="/chatbot" element={<Chatbot/>} />
+      {/* Add more routes as needed */}
     </Routes>
   )
 }
