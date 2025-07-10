@@ -94,7 +94,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import { Button } from "@/Components/ui/button"
 import { Input } from "@/Components/ui/input"
 import { Card, CardContent } from "@/Components/ui/card"
@@ -160,7 +160,7 @@ export default function ChatbotPage() {
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <Button
               variant="ghost"
-              onClick={() => router.push("/self-help")}
+              onClick={() => Navigate("/self-help")}
               className="rounded-full hover:bg-purple-100"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
