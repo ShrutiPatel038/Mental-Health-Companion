@@ -8,7 +8,9 @@ export default function LogoutPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log("LogoutPage mounted");
         const performLogout = async () => {
+          console.log("Logging out...");
       try {
         await logout() // 👈 Backend call to clear HttpOnly cookie
 

@@ -6,7 +6,7 @@ import { Home, BarChart3, Heart, Smile, Settings, LogOut, Menu, X, Sun, Moon, Us
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { getProfile } from "@/lib/api"
+import { getProfile, logout } from "@/lib/api"
 
 const navigation = [
   { name: "Welcome", href: "/welcome", icon: Home },
@@ -37,11 +37,19 @@ export default function SidebarLayout({ children }) {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    // Remove token and redirect to login
+  const handleLogout = async () => {
+  console.log("🔁 Attempting logout...") // <-- debug log
+
+  try {
+    const res = await logout()
+    console.log("✅ Logout response:", res) // <-- debug log
     localStorage.removeItem("token")
     navigate("/login")
+  } catch (err) {
+    console.error("❌ Logout failed:", err)
+    navigate("/login")
   }
+}
 
     const getInitials = (name) => {
     if (!name) return "U"
