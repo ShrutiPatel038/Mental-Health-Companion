@@ -53,3 +53,25 @@ export const sendChatMessage = async (messages) => {
   return response.data; // { reply: "..." }
 };
 
+export const fetchNegativeThoughts = async (difficulty = "easy", count = 5) => {
+  const response = await axiosInstance.post("/thoughts", {
+    thoughtsOnly: true,
+    difficulty,
+    count,
+  });
+  return response.data.thoughts;
+};
+
+export const evaluateThought = async (originalThought, userAnswer, difficulty = "easy") => {
+  const response = await axiosInstance.post("/thoughts", {
+    originalThought,
+    userAnswer,
+    difficulty,
+  });
+  return response.data;
+};
+
+export const sendThoughts = async (difficulty, count) => {
+  const res = await axiosInstance.post("/thoughts", { difficulty, count });
+  return res.data; // { thoughts: [] }
+};

@@ -6,6 +6,7 @@ import geminiRoutes from './routes/gemini.route.js'  // import gemini routes
 import challengeRoutes from './routes/challenge.route.js'; 
 import journalRoutes from './routes/journal.route.js';  // import journal routes
 import chatbotRoutes from './routes/chatbot.route.js'  // import chatbot routes
+import thoughtsRoutes from './routes/thoughts.route.js'  // import thoughts route
 
 import cors from 'cors'  // to enable CORS for the API
 import cookieParser from 'cookie-parser'  // to parse cookies in request
@@ -28,7 +29,8 @@ app.use('/api/affirmation', affirmationRoutes);
 app.use('/api/gemini',geminiRoutes);
 app.use('/api/challenge',challengeRoutes);
 app.use('/api/gratitude-journal', journalRoutes);
-app.use('/api/chatbot',chatbotRoutes);  // import chatbot routes
+app.use('/api/chatbot',chatbotRoutes);  // import chatbot route
+app.use('/api/thoughts', thoughtsRoutes) ; // placeholder for thoughts route
 console.log("Routes initialized successfully");
 
 
