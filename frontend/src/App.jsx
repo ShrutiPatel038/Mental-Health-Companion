@@ -14,6 +14,7 @@ import GratitudeJournal from "./pages/GratitudeJournal"
 import SoothingSoundsPage from "./pages/SoothingSoundsPage"
 import Chatbot from "./pages/Chatbot"
 import Thoughts from "./pages/Thoughts"
+import VisualGallery from "./pages/VisualGallery"
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
       <Route path="/soothing-sounds" element={<SoothingSoundsPage/>}/>
       <Route path="/chatbot" element={<Chatbot/>} />
       <Route path="/thoughts" element={<Thoughts/>} />
+      <Route path="/visual-gallery" element={<VisualGallery/>} />
       {/* Add more routes as needed */}
     </Routes>
   )

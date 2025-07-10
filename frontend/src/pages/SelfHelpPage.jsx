@@ -180,6 +180,14 @@ export default function SelfHelpPage() {
                           Start
                         </Button>
                       </Link>
+                    ) : module.id === 6 ? (
+                      <Link to="/visual-gallery">
+                        <Button
+                          className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
+                        >
+                          Start
+                        </Button>
+                      </Link>
                     ) : (
                       <Button
                         className={`w-full rounded-2xl bg-gradient-to-r ${module.color} hover:opacity-90 text-white font-medium`}
