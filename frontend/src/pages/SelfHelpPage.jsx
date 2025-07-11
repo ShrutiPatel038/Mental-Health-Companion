@@ -62,11 +62,11 @@ const modules = [
   },
   {
     id: 6,
-    title: "Self-Esteem Booster",
-    description: "Build confidence and self-worth through positive affirmations and exercises.",
+    title: "Visual Relaxation Gallery",
+    description: "Explore a curated collection of calming videos to soothe your mind.",
     icon: Heart,
     progress: 20,
-    color: "from-pink-400 to-rose-500",
+    color: "from-orange-600 to-orange-800",
     bgColor: "from-pink-50 to-rose-100",
     difficulty: "Intermediate",
   }
