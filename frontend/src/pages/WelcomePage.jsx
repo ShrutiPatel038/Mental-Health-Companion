@@ -8,29 +8,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/Components/ui/card";
-import { Badge } from "@/Components/ui/badge";
+
 import { Flame, Target, TrendingUp, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
-import { getProfile } from "@/lib/api";
+import { getProfile, getStreak } from "@/lib/api";
 import { useNavigate } from "react-router";
 import useMoodStore from "@/store/useMoodStore";
 
 export default function WelcomePage() {
-  const [streak, setStreak] = useState(null);
 
-  useEffect(() => {
-    async function fetchStreak() {
-      try {
-        const data = await getStreak();
-        setStreak(data.streak);
-      } catch (err) {
-        console.error("Failed to fetch streak", err);
-      }
-    }
-    fetchStreak();
-  }, []);
 
   const [username, setUsername] = useState("");
+  const [streak, setStreak] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -38,13 +27,18 @@ export default function WelcomePage() {
         const data = await getProfile();
         console.log("Fetched profile:", data);
         setUsername(data.username || data.name || "User"); // Adjust based on your backend field
+        const userStreak = await getStreak();
+        setStreak(userStreak);
       } catch (err) {
-        console.error("Failed to fetch profile:", err);
+        console.error("Failed to fetch profile or streak:", err);
       }
     };
 
     fetchProfile();
   }, []);
+
+  
+
 
   const [selectedMood, setSelectedMood] = useState(null);
 
@@ -169,24 +163,25 @@ export default function WelcomePage() {
           </div>
 
           {/* Streak Section */}
-          <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-300 rounded-3xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-center space-x-4">
-                <Flame className="w-8 h-8 text-orange-500" />
-                <div className="text-center">
-                  <h2>
-                    Current Streak:{" "}
-                    {streak === null
-                      ? "Loading..."
-                      : streak < 7
-                      ? "Keep trying"
-                      : `${streak} 🔥`}
-                  </h2>
-                </div>
-                <Flame className="w-8 h-8 text-orange-500" />
-              </div>
-            </CardContent>
-          </Card>
+<Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-300 rounded-3xl">
+  <CardContent className="p-6">
+    <div className="flex items-center justify-center space-x-4">
+      <Flame className="w-8 h-8 text-orange-500" />
+      <div className="text-center">
+        <h2 className="text-lg font-semibold text-gray-800">
+          Current Streak:{" "}
+          {streak === null
+            ? "Loading..."
+            : streak === 0
+            ? "Start your streak today!"
+            : `${streak} ${streak > 0 ? "🔥" : ""}`}
+        </h2>
+      </div>
+      <Flame className="w-8 h-8 text-orange-500" />
+    </div>
+  </CardContent>
+</Card>
+
 
           {/*Mood Picker*/}
           {/* <Card className="bg-white/80 backdrop-blur-sm border-purple-200 rounded-3xl">
@@ -288,3 +283,4 @@ export default function WelcomePage() {
     </ProtectedRoute>
   );
 }
+

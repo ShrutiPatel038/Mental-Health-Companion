@@ -76,12 +76,8 @@ export const sendThoughts = async (difficulty, count) => {
   return res.data; // { thoughts: [] }
 };
 
-export const getStreak = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const user = await User.findById(userId); // assuming Mongoose
-    return res.status(200).json({ streak: user.streak || 0 });
-  } catch (err) {
-    return res.status(500).json({ error: 'Failed to get streak' });
-  }
+export const getStreak = async () => {
+  const res = await axiosInstance.get("/challenge/streak");
+  return res.data.streak; // e.g., 5
 };
+

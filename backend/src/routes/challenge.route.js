@@ -52,4 +52,44 @@ router.get('/completed', authenticateUser, async (req, res) => {
   }
 });
 
+// GET /challenge/streak
+router.get('/streak', authenticateUser, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const completed = user.completedChallenges || new Map();
+
+    const completedDates = Array.from(completed.keys()).filter(
+      (key) => typeof key === "string"
+    );
+
+    // Sort the dates in reverse chronological order
+    completedDates.sort((a, b) => new Date(b) - new Date(a));
+
+    let streak = 0;
+    const today = new Date();
+    
+    for (let i = 0; i < completedDates.length; i++) {
+      const date = new Date(completedDates[i]);
+      const compareDate = new Date();
+      compareDate.setDate(today.getDate() - streak);
+
+      // Convert both to YYYY-MM-DD
+      const d1 = date.toISOString().slice(0, 10);
+      const d2 = compareDate.toISOString().slice(0, 10);
+
+      if (d1 === d2) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    return res.json({ streak });
+  } catch (err) {
+    console.error("Error calculating streak:", err);
+    res.status(500).json({ message: "Error calculating streak" });
+  }
+});
+
+
 export default router;
