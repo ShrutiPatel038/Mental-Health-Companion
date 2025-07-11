@@ -143,7 +143,7 @@ export default function ThoughtReframingPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Self-Help
           </Button>
-          <div className="flex items-center space-x-3">
+          <div className="flex align-items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
             </div>

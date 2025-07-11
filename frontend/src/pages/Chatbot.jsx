@@ -160,7 +160,7 @@ export default function ChatbotPage() {
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <Button
               variant="ghost"
-              onClick={() => Navigate("/self-help")}
+              onClick={() => router("/self-help")}
               className="rounded-full hover:bg-purple-100"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

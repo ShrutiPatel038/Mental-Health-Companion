@@ -12,8 +12,8 @@ const navigation = [
   { name: "Welcome", href: "/welcome", icon: Home },
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
   { name: "Self-Help", href: "/self-help", icon: Heart },
-  { name: "Mood Tracker", href: "/mood-tracker", icon: Smile },
-  { name: "Settings", href: "/settings", icon: Settings },
+  // { name: "Mood Tracker", href: "/mood-tracker", icon: Smile },
+  // { name: "Settings", href: "/settings", icon: Settings },
 ]
 
 export default function SidebarLayout({ children }) {
@@ -140,10 +140,10 @@ export default function SidebarLayout({ children }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 rounded-2xl">
-                  <DropdownMenuItem className="rounded-xl">
+                  {/* <DropdownMenuItem className="rounded-xl">
                     <Settings className="w-4 h-4 mr-2" />
                     Settings
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                   <DropdownMenuItem className="rounded-xl text-red-600" onClick={handleLogout}>
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout
@@ -163,12 +163,6 @@ export default function SidebarLayout({ children }) {
             <Button variant="ghost" size="sm" className="lg:hidden rounded-full" onClick={() => setSidebarOpen(true)}>
               <Menu className="w-5 h-5" />
             </Button>
-
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="rounded-full" onClick={() => setDarkMode(!darkMode)}>
-                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </Button>
-            </div>
           </div>
         </header>
 

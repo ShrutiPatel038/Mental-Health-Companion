@@ -21,7 +21,7 @@ Requirements:
 
   try {
      const result = await ai.models.generateContent({
-  model: "models/gemini-1.5-flash",
+  model: "gemini-2.5-flash",
   temperature: 1.0,
   contents: [
     {

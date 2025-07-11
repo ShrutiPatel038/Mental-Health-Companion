@@ -3,7 +3,7 @@ import { useNavigate } from "react-router"
 import { Button } from "@/Components/ui/button"
 import { Card, CardContent } from "@/Components/ui/card"
 import { Textarea } from "@/Components/ui/textarea"
-import { ArrowLeft, Save, RefreshCw, Sparkles, Heart, Loader2 } from "lucide-react"
+import { ArrowLeft, Save, RefreshCw, Sparkles,BookOpen, Heart, Loader2 } from "lucide-react"
 import { getGratitudePrompt } from "@/lib/api"
 
 export default function GratitudeJournal() {
@@ -52,7 +52,7 @@ export default function GratitudeJournal() {
           </Button>
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
               Gratitude Journal

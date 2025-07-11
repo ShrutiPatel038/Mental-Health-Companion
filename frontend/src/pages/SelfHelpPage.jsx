@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Com
 import { Button } from "@/Components/ui/button"
 import { Progress } from "@/Components/ui/progress"
 import { Badge } from "@/Components/ui/badge"
-import { Heart, Wind, BookOpen, Anchor, Sparkles, Shield, Brain, Moon, Clock, RefreshCw } from "lucide-react"
+import { Heart, Wind, BookOpen, Anchor, Sparkles, Shield, Brain, Moon, Clock, RefreshCw, Bot } from "lucide-react"
 import { Link } from "react-router"
 import { useNavigate } from "react-router-dom"
 
@@ -22,8 +22,8 @@ const modules = [
   },
   {
     id: 2,
-    title: "Guided Journaling",
-    description: "Express your thoughts and emotions through structured writing prompts.",
+    title: "Gratitude Journaling",
+    description: "Cultivate a positive mindset by reflecting on things you are grateful for. ",
     icon: BookOpen,
     progress: 45,
     color: "from-green-400 to-green-600",
@@ -33,7 +33,7 @@ const modules = [
   {
     id: 3,
     title: "Thought reframing tool",
-    description: "Transform negative thoughts into positive ones.",
+    description: "Transform negative thoughts into positive ones with practical exercises.",
     icon: Anchor,
     progress: 60,
     color: "from-purple-400 to-purple-600",
@@ -54,7 +54,7 @@ const modules = [
     id: 5,
     title: "Chat with Ember",
     description: "Practical strategies and techniques to manage anxiety in daily life.",
-    icon: Shield,
+    icon: Bot,
     progress: 30,
     color: "from-red-400 to-pink-500",
     bgColor: "from-red-50 to-pink-100",
