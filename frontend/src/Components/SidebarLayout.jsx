@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useNavigate, useLocation, Link } from "react-router"
-import { Home, BarChart3, Heart, Smile, Settings, LogOut, Menu, X, Sun, Moon, User } from "lucide-react"
+import { Home, BarChart3, Heart, Smile, Settings, LogOut, Menu, X, Sun, Moon, User,Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -12,6 +12,7 @@ const navigation = [
   { name: "Welcome", href: "/welcome", icon: Home },
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
   { name: "Self-Help", href: "/self-help", icon: Heart },
+  { name: "SOS Support", href: "/sos", icon: Shield },
   // { name: "Mood Tracker", href: "/mood-tracker", icon: Smile },
   // { name: "Settings", href: "/settings", icon: Settings },
 ]

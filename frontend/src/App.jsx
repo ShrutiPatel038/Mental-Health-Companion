@@ -15,6 +15,7 @@ import SoothingSoundsPage from "./pages/SoothingSoundsPage"
 import Chatbot from "./pages/Chatbot"
 import Thoughts from "./pages/Thoughts"
 import VisualGallery from "./pages/VisualGallery"
+import SOSSupportPage from "./pages/SosPage" // Placeholder for SOS Support page
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
       <Route path="/chatbot" element={<Chatbot/>} />
       <Route path="/thoughts" element={<Thoughts/>} />
       <Route path="/visual-gallery" element={<VisualGallery/>} />
+      <Route path="/sos" element={<SOSSupportPage/>} /> {/* Placeholder for SOS Support page */}
       {/* Add more routes as needed */}
     </Routes>
   )
