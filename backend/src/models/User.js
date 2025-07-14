@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    moods: [
+    {
+        value: { type: Number, required: true },
+        date: { type: Date, default: Date.now }
+    }
+    ],
     completedChallenges: {
         type: Map,
         of: Boolean,

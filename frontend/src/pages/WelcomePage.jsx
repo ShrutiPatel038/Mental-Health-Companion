@@ -11,7 +11,7 @@ import {
 
 import { Flame, Target, TrendingUp, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
-import { getProfile, getStreak } from "@/lib/api";
+import { getProfile, getStreak, submitMood } from "@/lib/api";
 import { useNavigate } from "react-router";
 import useMoodStore from "@/store/useMoodStore";
 
@@ -41,6 +41,7 @@ export default function WelcomePage() {
 
 
   const [selectedMood, setSelectedMood] = useState(null);
+  const [moodSubmitStatus, setMoodSubmitStatus] = useState("");
 
   const { setMood } = useMoodStore();
 
@@ -48,6 +49,20 @@ export default function WelcomePage() {
 
   const handleStartChallenge = () => {
     navigate("/dashboard");
+  };
+
+  const handleSubmitMood = async () => {
+    if (!selectedMood) return;
+    try {
+      await submitMood(selectedMood);
+      setMood(selectedMood);
+      setMoodSubmitStatus("Mood submitted!");
+      setSelectedMood(null);
+      setTimeout(() => setMoodSubmitStatus(""), 2000);
+    } catch (err) {
+      setMoodSubmitStatus("Failed to submit mood");
+      setTimeout(() => setMoodSubmitStatus(""), 2000);
+    }
   };
 
   const moods = [
@@ -236,10 +251,7 @@ export default function WelcomePage() {
               {moods.map((mood) => (
                 <button
                   key={mood.value}
-                  onClick={() => {
-                    setMood(mood.value);
-                    setSelectedMood(mood.value);
-                  }}
+                  onClick={() => setSelectedMood(mood.value)}
                   className={`mood-emoji p-4 rounded-2xl transition-all duration-300 ${
                     selectedMood === mood.value
                       ? `bg-gradient-to-r ${mood.color} shadow-lg scale-110`
@@ -263,6 +275,15 @@ export default function WelcomePage() {
             </div>
             {selectedMood && (
               <div className="text-center animate-fade-in">
+                <Button
+                  className="mt-2 px-6 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition"
+                  onClick={handleSubmitMood}
+                >
+                  Submit Mood
+                </Button>
+                {moodSubmitStatus && (
+                  <div className="mt-2 text-green-600 font-semibold">{moodSubmitStatus}</div>
+                )}
                 <h3 className="text-lg font-semibold mb-4 text-gray-800">
                   Recommended Activities:
                 </h3>

@@ -16,6 +16,7 @@ import Chatbot from "./pages/Chatbot"
 import Thoughts from "./pages/Thoughts"
 import VisualGallery from "./pages/VisualGallery"
 import SOSSupportPage from "./pages/SosPage" // Placeholder for SOS Support page
+import MoodInsightsPage from "./pages/MoodInsightsPage";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
       <Route path="/thoughts" element={<Thoughts/>} />
       <Route path="/visual-gallery" element={<VisualGallery/>} />
       <Route path="/sos" element={<SOSSupportPage/>} /> {/* Placeholder for SOS Support page */}
+      <Route path="/mood-insights" element={<MoodInsightsPage />} />
       {/* Add more routes as needed */}
     </Routes>
   )

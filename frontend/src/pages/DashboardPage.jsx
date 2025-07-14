@@ -12,9 +12,11 @@ import { Badge } from "@/Components/ui/badge";
 import { CheckCircle, Calendar, TrendingUp, Heart, Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import useMoodStore from "@/store/useMoodStore";
-import { getDailyChallenge } from "@/lib/api";
+import { getDailyChallenge, getMoodHistory } from "@/lib/api";
 import { markChallengeComplete, getCompletedChallenges ,getDailyChallengeForHeatmap} from "@/lib/api";
 import axios from "axios";
+import MoodTrendMiniChart from "../components/MoodTrendMiniChart";
+import { useNavigate } from "react-router";
 
 export default function DashboardPage() {
   const [quote, setQuote] = useState("");
@@ -126,6 +128,18 @@ const checkTodayCompletion = async () => {
   }
 };
 
+const [moodHistory, setMoodHistory] = useState([]);
+
+useEffect(() => {
+  getMoodHistory()
+    .then((data) => {
+      console.log("Fetched mood history:", data);
+      setMoodHistory(data);
+    })
+    .catch(() => setMoodHistory([]));
+}, []);
+
+const navigate = useNavigate();
 
   return (
     <ProtectedRoute>
@@ -287,22 +301,17 @@ const checkTodayCompletion = async () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-48 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl flex items-center justify-center">
-                  <p className="text-gray-500">
-                    Mood chart visualization would go here
-                  </p>
-                </div>
-                <div className="mt-4 flex justify-between text-sm">
-                  <Badge variant="outline" className="rounded-full">
-                    Avg: 4.2/5
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className="rounded-full text-green-600"
-                  >
-                    ↗ Improving
-                  </Badge>
-                </div>
+                {moodHistory.length > 0 ? (
+                  <MoodTrendMiniChart data={moodHistory} />
+                ) : (
+                  <div className="text-gray-400 text-center">No mood data yet</div>
+                )}
+                <button
+                  className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded-lg"
+                  onClick={() => navigate("/mood-insights")}
+                >
+                  View Details
+                </button>
               </CardContent>
             </Card>
 

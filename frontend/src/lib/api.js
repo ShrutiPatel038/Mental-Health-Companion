@@ -81,3 +81,14 @@ export const getStreak = async () => {
   return res.data.streak; // e.g., 5
 };
 
+export const submitMood = async (value) => {
+  const response = await axiosInstance.post("/mood/submit", { value });
+  return response.data;
+};
+
+
+export const getMoodHistory = async () => {
+  const response = await axiosInstance.get("/mood/history", { withCredentials: true });
+  return response.data.moods;
+};
+
