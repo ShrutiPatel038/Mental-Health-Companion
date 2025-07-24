@@ -15,7 +15,7 @@ export default function LogoutPage() {
         await logout() // 👈 Backend call to clear HttpOnly cookie
 
         // Optional: clear frontend local token too
-        localStorage.removeItem("token")
+       
 
         // Redirect to login after backend logout
         navigate("/login")

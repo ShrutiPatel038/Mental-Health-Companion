@@ -29,7 +29,7 @@ export default function LoginPage() {
           password: formData.password
         })
     
-        localStorage.setItem("token", data.token)
+        
         router("/welcome")
       } catch (error) {
         console.error("login failed:", error)

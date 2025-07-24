@@ -66,36 +66,11 @@ export default function WelcomePage() {
   };
 
   const moods = [
-    {
-      emoji: "😄",
-      label: "Amazing",
-      value: 5,
-      color: "from-yellow-400 to-orange-400",
-    },
-    {
-      emoji: "😊",
-      label: "Good",
-      value: 4,
-      color: "from-green-400 to-blue-400",
-    },
-    {
-      emoji: "😐",
-      label: "Okay",
-      value: 3,
-      color: "from-blue-400 to-purple-400",
-    },
-    {
-      emoji: "😔",
-      label: "Low",
-      value: 2,
-      color: "from-purple-400 to-pink-400",
-    },
-    {
-      emoji: "😢",
-      label: "Struggling",
-      value: 1,
-      color: "from-pink-400 to-red-400",
-    },
+    { emoji: "😄", label: "Amazing", value: 5, color: "from-yellow-400 to-orange-400" },
+    { emoji: "😊", label: "Good", value: 4, color: "from-green-400 to-blue-400" },
+    { emoji: "😐", label: "Okay", value: 3, color: "from-blue-400 to-purple-400" },
+    { emoji: "😔", label: "Low", value: 2, color: "from-purple-400 to-pink-400" },
+    { emoji: "😢", label: "Struggling", value: 1, color: "from-pink-400 to-red-400" },
   ];
 
   const getRecommendedActivities = (mood) => {
@@ -178,24 +153,24 @@ export default function WelcomePage() {
           </div>
 
           {/* Streak Section */}
-<Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-300 rounded-3xl">
-  <CardContent className="p-6">
-    <div className="flex items-center justify-center space-x-4">
-      <Flame className="w-8 h-8 text-orange-500" />
-      <div className="text-center">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Current Streak:{" "}
-          {streak === null
-            ? "Loading..."
-            : streak === 0
-            ? "Start your streak today!"
-            : `${streak} ${streak > 0 ? "🔥" : ""}`}
-        </h2>
-      </div>
-      <Flame className="w-8 h-8 text-orange-500" />
-    </div>
-  </CardContent>
-</Card>
+          <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-300 rounded-3xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-center space-x-4">
+                <Flame className="w-8 h-8 text-orange-500" />
+                <div className="text-center">
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    Current Streak:{" "}
+                    {streak === null
+                      ? "Loading..."
+                      : streak === 0
+                      ? "Start your streak today!"
+                      : `${streak} ${streak > 0 ? "🔥" : ""}`}
+                  </h2>
+                </div>
+                <Flame className="w-8 h-8 text-orange-500" />
+              </div>
+            </CardContent>
+          </Card>
 
 
           {/*Mood Picker*/}
@@ -276,7 +251,7 @@ export default function WelcomePage() {
             {selectedMood && (
               <div className="text-center animate-fade-in">
                 <Button
-                  className="mt-2 px-6 py-2 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600 transition"
+                  className="mt-2 px-6 py-2 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 transition"
                   onClick={handleSubmitMood}
                 >
                   Submit Mood
@@ -287,15 +262,31 @@ export default function WelcomePage() {
                 <h3 className="text-lg font-semibold mb-4 text-gray-800">
                   Recommended Activities:
                 </h3>
-                <div className="grid md:grid-cols-3 gap-4">
-                  {getRecommendedActivities(selectedMood).map(
-                    (activity, index) => (
-                      <div key={index} className="bg-white/50 p-4 rounded-2xl">
-                        <p className="text-gray-700">{activity}</p>
-                      </div>
-                    )
-                  )}
-                </div>
+                {/* Get the color for the selected mood */}
+                {(() => {
+                  const selectedMoodObj = moods.find((m) => m.value === selectedMood);
+                  const selectedMoodColor = selectedMoodObj ? selectedMoodObj.color : "from-blue-100 to-blue-300";
+                  return (
+                    <div className="grid md:grid-cols-3 gap-4">
+                      {getRecommendedActivities(selectedMood).map((activity, index) => (
+                        <div
+                          key={index}
+                          className="relative rounded-2xl overflow-hidden border border-gray-200 shadow p-4"
+                        >
+                          {/* Gradient background with opacity */}
+                          <div
+                            className={`absolute inset-0 bg-gradient-to-r ${selectedMoodColor}`}
+                            style={{ opacity: 0.4 }}
+                          />
+                          {/* Text stays fully opaque */}
+                          <div className="relative z-10">
+                            <p className="text-gray-800 font-medium">{activity}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </Card>

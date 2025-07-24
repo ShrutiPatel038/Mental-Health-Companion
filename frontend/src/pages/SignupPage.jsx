@@ -35,7 +35,7 @@ export default function SignupPage() {
       password: formData.password
     })
 
-    localStorage.setItem("token", data.token)
+    
     router("/welcome")
   } catch (error) {
     console.error("Signup failed:", error)
