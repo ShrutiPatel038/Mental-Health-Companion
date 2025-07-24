@@ -16,13 +16,10 @@ import {
   CloudRain,
   Waves,
   TreePine,
-  Wind,
-  Flame,
-  Music,
-  Brain,
-  BrainIcon,
-  BrainCircuitIcon,
   Droplets,
+  Brain,
+  BrainCircuitIcon,
+  Music,
 } from "lucide-react"
 import ProtectedRoute from "@/Components/ProtectedRoute"
 import SidebarLayout from "@/Components/SidebarLayout"
@@ -35,7 +32,7 @@ const soundTracks = [
     icon: Waves,
     color: "from-blue-400 to-cyan-500",
     bgColor: "from-blue-50 to-cyan-50",
-    audioUrl: "/sounds/ocean.mp3", // You'll need to add these audio files
+    audioUrl: "/sounds/ocean.mp3",
     duration: "30:00",
   },
   {
@@ -196,8 +193,8 @@ export default function SoothingSoundsPage() {
       <SidebarLayout>
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
           {/* Header */}
-          <div className="bg-white/80 backdrop-blur-md border-b border-purple-200 px-6 py-4 mb-8">
-            <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="bg-white/80 backdrop-blur-md border-b border-purple-200 px-4 sm:px-6 py-4 mb-8">
+            <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
               <Button
                 variant="ghost"
                 onClick={() => navigate("/self-help")}
@@ -210,31 +207,30 @@ export default function SoothingSoundsPage() {
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl flex items-center justify-center">
                   <Music className="w-5 h-5 text-white" />
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
                   Soothing Sounds
                 </h1>
               </div>
-              <div className="w-24"></div>
+              <div className="w-24" />
             </div>
           </div>
 
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
             {/* Welcome Section */}
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
                 Find Your Peace 🎵
               </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Immerse yourself in calming sounds designed to reduce stress, improve focus, and promote deep
-                relaxation.
+              <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto">
+                Immerse yourself in calming sounds designed to reduce stress, improve focus, and promote deep relaxation.
               </p>
             </div>
 
             {/* Current Playing Track */}
             {currentTrack && (
               <Card className="mb-8 bg-gradient-to-r from-white/90 to-white/70 backdrop-blur-md border-purple-200 rounded-3xl shadow-xl">
-                <CardContent className="p-8">
-                  <div className="flex items-center space-x-6">
+                <CardContent className="p-4 sm:p-6 md:p-8">
+                  <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-6">
                     <div
                       className={`w-20 h-20 bg-gradient-to-r ${currentTrackData?.color} rounded-3xl flex items-center justify-center`}
                     >
@@ -242,7 +238,7 @@ export default function SoothingSoundsPage() {
                     </div>
 
                     <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-gray-800 mb-2">{currentTrack.title}</h3>
+                      <h3 className="text-xl font-bold text-gray-800 mb-2">{currentTrack.title}</h3>
                       <p className="text-gray-600 mb-4">{currentTrackData?.description}</p>
 
                       {/* Progress Bar */}
@@ -260,13 +256,8 @@ export default function SoothingSoundsPage() {
                     </div>
 
                     {/* Controls */}
-                    <div className="flex items-center space-x-4">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={restartTrack}
-                        className="rounded-full hover:bg-purple-100"
-                      >
+                    <div className="flex flex-wrap items-center gap-4">
+                      <Button variant="ghost" size="sm" onClick={restartTrack} className="rounded-full hover:bg-purple-100">
                         <RotateCcw className="w-5 h-5" />
                       </Button>
 
@@ -278,15 +269,10 @@ export default function SoothingSoundsPage() {
                       </Button>
 
                       <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={toggleMute}
-                          className="rounded-full hover:bg-purple-100"
-                        >
+                        <Button variant="ghost" size="sm" onClick={toggleMute} className="rounded-full hover:bg-purple-100">
                           {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                         </Button>
-                        <div className="w-24">
+                        <div className="w-20 sm:w-24">
                           <Slider value={volume} onValueChange={setVolume} max={100} step={1} className="w-full" />
                         </div>
                       </div>
@@ -297,7 +283,7 @@ export default function SoothingSoundsPage() {
             )}
 
             {/* Sound Tracks Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               {soundTracks.map((track) => {
                 const IconComponent = track.icon
                 const isCurrentTrack = currentTrack?.id === track.id
@@ -305,30 +291,33 @@ export default function SoothingSoundsPage() {
                 return (
                   <Card
                     key={track.id}
-                    className={`
-                      bg-gradient-to-br ${track.bgColor} border-2 rounded-3xl cursor-pointer
-                      hover:transform hover:scale-105 transition-all duration-300 hover:shadow-xl
-                      ${isCurrentTrack ? "ring-4 ring-blue-300 shadow-xl scale-105" : "border-opacity-20"}
-                    `}
+                    className={`bg-gradient-to-br ${track.bgColor} border-2 rounded-3xl cursor-pointer hover:transform hover:scale-105 transition-all duration-300 hover:shadow-xl ${
+                      isCurrentTrack ? "ring-4 ring-blue-300 shadow-xl scale-105" : "border-opacity-20"
+                    }`}
                     onClick={() => playTrack(track)}
                   >
-                    <CardContent className="p-6 text-center">
+                    <CardContent className="p-4 text-center">
                       <div
-                        className={`w-16 h-16 bg-gradient-to-r ${track.color} rounded-3xl flex items-center justify-center mx-auto mb-4 ${isCurrentTrack && isPlaying ? "animate-pulse" : ""}`}
+                        className={`w-16 h-16 bg-gradient-to-r ${track.color} rounded-3xl flex items-center justify-center mx-auto mb-4 ${
+                          isCurrentTrack && isPlaying ? "animate-pulse" : ""
+                        }`}
                       >
                         <IconComponent className="w-8 h-8 text-white" />
                       </div>
 
                       <h3 className="text-lg font-bold text-gray-800 mb-2">{track.title}</h3>
                       <p className="text-gray-600 text-sm mb-3">{track.description}</p>
-                      {/* <p className="text-xs text-gray-500">{track.duration}</p> */}
 
                       {isCurrentTrack && (
                         <div className="mt-3 flex items-center justify-center">
                           <div
-                            className={`w-3 h-3 rounded-full ${isPlaying ? "bg-green-400 animate-pulse" : "bg-gray-400"} mr-2`}
+                            className={`w-3 h-3 rounded-full ${
+                              isPlaying ? "bg-green-400 animate-pulse" : "bg-gray-400"
+                            } mr-2`}
                           />
-                          <span className="text-xs font-medium text-gray-600">{isPlaying ? "Playing" : "Paused"}</span>
+                          <span className="text-xs font-medium text-gray-600">
+                            {isPlaying ? "Playing" : "Paused"}
+                          </span>
                         </div>
                       )}
                     </CardContent>
@@ -339,7 +328,7 @@ export default function SoothingSoundsPage() {
 
             {/* Tips Section */}
             <Card className="bg-gradient-to-r from-green-100 to-blue-100 border-green-300 rounded-3xl mb-8">
-              <CardContent className="p-6 text-center">
+              <CardContent className="p-4 sm:p-6 text-center">
                 <h3 className="text-xl font-bold text-green-800 mb-4">💡 Relaxation Tips</h3>
                 <div className="grid md:grid-cols-3 gap-4 text-sm text-green-700">
                   <div>
@@ -357,7 +346,11 @@ export default function SoothingSoundsPage() {
           </div>
 
           {/* Audio Element */}
-          {currentTrack && <audio ref={audioRef} src={currentTrack.audioUrl} loop preload="auto" />}
+          {currentTrack && (
+            <div className="fixed bottom-4 left-4 right-4 z-50 sm:static sm:z-auto">
+              <audio ref={audioRef} src={currentTrack.audioUrl} loop preload="auto" />
+            </div>
+          )}
         </div>
       </SidebarLayout>
     </ProtectedRoute>

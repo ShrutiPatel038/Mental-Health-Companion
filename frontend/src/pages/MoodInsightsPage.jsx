@@ -34,12 +34,15 @@ export default function MoodInsightsPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getMoodHistory()
+    const now = new Date()
+    const currentMonth = now.getMonth() + 1 // Month is 0-based
+    const currentYear = now.getFullYear()
+
+    getMoodHistory(currentMonth, currentYear)
       .then(setMoodHistory)
       .catch(() => setMoodHistory([]))
   }, [])
 
-  // Prepare data for bar chart
   const labels = moodHistory.map((d) =>
     new Date(d.date).toLocaleString(undefined, {
       month: "short",
@@ -92,7 +95,6 @@ export default function MoodInsightsPage() {
     animation: true,
   }
 
-  // Calculate mood statistics
   const avgMood = moodHistory.length > 0 
     ? (moodHistory.reduce((sum, entry) => sum + entry.value, 0) / moodHistory.length).toFixed(1)
     : 0
